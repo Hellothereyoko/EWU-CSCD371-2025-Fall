@@ -9,4 +9,9 @@ public static class BaseLoggerMixins
         ArgumentNullException.ThrowIfNull(logger);
         logger.Log(LogLevel.Error, string.Format(message, args));
     }
+
+    public static void EnsureLogger(BaseLogger? logger)
+    {
+        ArgumentNullException.ThrowIfNull(logger);
+    }
 }
