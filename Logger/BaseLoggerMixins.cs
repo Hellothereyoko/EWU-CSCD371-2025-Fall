@@ -19,6 +19,11 @@ public static class BaseLoggerMixins
         EnsureLogger(logger).Log(LogLevel.Information, string.Format(message, args));
     }
 
+    public static void Debug(this BaseLogger? logger, string message, params object[] args)
+    {
+        EnsureLogger(logger).Log(LogLevel.Debug, string.Format(message, args));
+    }
+
     public static BaseLogger EnsureLogger(BaseLogger? logger)
     {
         ArgumentNullException.ThrowIfNull(logger);
