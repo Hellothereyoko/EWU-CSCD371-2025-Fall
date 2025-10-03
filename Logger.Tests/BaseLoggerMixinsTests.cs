@@ -22,6 +22,17 @@ public class BaseLoggerMixinsTests
     }
 
     [TestMethod]
+    public void EnsureLogger_WithNullLogger_ThrowsException()
+    {
+        // Arrange
+        BaseLogger? logger = null;
+        // Act
+        void Act() => BaseLoggerMixins.EnsureLogger(logger);
+        // Assert
+        Assert.ThrowsExactly<ArgumentNullException>(Act);
+    }
+
+    [TestMethod]
     public void Error_WithData_LogsMessage()
     {
         // Arrange
