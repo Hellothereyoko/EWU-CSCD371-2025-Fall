@@ -27,11 +27,11 @@ namespace Logger.Tests
             var timestampToken = output.Split(' ')[0].Trim( '[' , ']' );
             Assert.IsTrue(DateTime.TryParse(timestampToken, out _), "Timestamp is not a valid DateTime");
 
-            StringAssert.Contains(output, $"[{nameof(ConsoleLoggerTests)}]");
+            Assert.Contains(output, $"[{nameof(ConsoleLoggerTests)}]");
 
-            StringAssert.Contains(output, "Error");
+            Assert.Contains(output, "Error");
             
-            StringAssert.Contains(output, message);
+            Assert.Contains(output, message);
         }
     }
 }
