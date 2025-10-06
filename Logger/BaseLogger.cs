@@ -1,11 +1,15 @@
 ﻿namespace Logger;
 
-public abstract class BaseLogger
+public interface BaseLogger
 {
     
     //Auto prop. for class name
-    public string ClassName { get; set; } = string.Empty;
+    string ClassName { get; }
 
-    public abstract void Log(LogLevel logLevel, string message);
+
+    public void Log(LogLevel logLevel, string message)
+    {
+        throw new System.NotImplementedException();
+    }
+
 }
-
