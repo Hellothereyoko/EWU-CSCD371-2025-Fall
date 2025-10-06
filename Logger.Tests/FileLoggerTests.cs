@@ -152,7 +152,9 @@ namespace Logger.Tests
             // Arrange & Act
             // Test that the class throws when the required className is null
             // This relies on the FileLogger constructor throwing an ArgumentNullException when passed null.
-            _ = new FileLogger("test/path", null!);
+            //_ = new FileLogger("test/path", null!);
+            _logFactory?.ConfigureFileLogger(_tempFilePath!);
+            var fileLogger = _logFactory.CreateLogger(null!);
             // Assert (Handled by attribute)
         }
     }
