@@ -8,7 +8,7 @@ public class LogFactory
 
 
     //Config Logger 
-    public void ConfigureLogger(string filePath)
+    public void ConfigureFileLogger(string filePath)
     {
         _filePath = filePath;
     }
