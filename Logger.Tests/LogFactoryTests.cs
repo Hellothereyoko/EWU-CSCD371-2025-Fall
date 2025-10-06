@@ -28,7 +28,7 @@ namespace Logger.Tests
             var logger = _logFactory.CreateLogger(TestClassName);
 
             // Assert
-            Assert.IsNull(logger, "Error! CreateLogger must return null if ConfigureFileLogger was not called.");
+            Assert.IsNull(logger, "Error: CreateLogger must return null if ConfigureFileLogger was not called.");
         }
 
         [TestMethod]
@@ -45,9 +45,9 @@ namespace Logger.Tests
 
             // Assert
             // Check that the FIleLogger instance was returned.
-            Assert.IsNotNull(logger, "Error! CreateLogger must return a logger instance after configuration.");
+            Assert.IsNotNull(logger, "Error: CreateLogger must return a logger instance after configuration.");
             // Check that the returned instance is actually a FileLogger.
-            Assert.IsTrue(logger is FileLogger, "Error! The returned logger instance must be of type FileLogger.");
+            Assert.IsTrue(logger is FileLogger, "Error: The returned logger instance must be of type FileLogger.");
 
             // Cleanup
             File.Delete(tempFilePath);
@@ -66,8 +66,8 @@ namespace Logger.Tests
             var logger = _logFactory.CreateLogger(expectedClassName) as FileLogger;
 
             // Assert
-            Assert.IsNotNull(logger, "Error! FileLogger should not be null.");
-            Assert.AreEqual(expectedClassName, logger.ClassName, "Error! The ClassName of the FileLogger must match the name associated with CreateLogger.");
+            Assert.IsNotNull(logger, "Error: FileLogger should not be null.");
+            Assert.AreEqual(expectedClassName, logger.ClassName, "Error: The ClassName of the FileLogger must match the name associated with CreateLogger.");
 
             // Delete the temp file
             File.Delete(tempFilePath);
@@ -79,7 +79,6 @@ namespace Logger.Tests
         {
             // Arrange & Act
             _logFactory.ConfigureFileLogger(null!);
-
             // Assert (Handled by attribute)
         }
     }
