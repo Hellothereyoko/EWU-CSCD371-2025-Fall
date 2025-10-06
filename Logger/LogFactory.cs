@@ -1,18 +1,31 @@
-﻿namespace Logger;
+﻿using System;
+
+namespace Logger;
 
 public class LogFactory
 {
     private string? _filePath;
-    public BaseLogger CreateLogger(string className)
+    public BaseLogger? CreateLogger(string className)
     {
-        if (_filePath is null)
+        if (className is null)
         {
-            return new FileLogger(className);
+            throw new ArgumentNullException("className");
         }
-        return new FileLogger(_filePath);
+            if (_filePath is null)
+        {
+            return null;
+        }
+        return new FileLogger(_filePath)
+        {
+        ClassName = className
+        };
     }
     public void ConfigureFileLogger(string filePath)
     {
+        if (filePath is null)
+        {
+            throw new ArgumentNullException("filePath");
+        }
         _filePath = filePath;
     }
 }
