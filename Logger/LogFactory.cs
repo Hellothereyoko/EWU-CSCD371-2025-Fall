@@ -2,9 +2,28 @@
 
 public class LogFactory
 {
-    public BaseLogger CreateLogger(string className)
+
+    //private store file path 
+    private string? _filePath;
+
+
+    //Config Logger 
+    public void ConfigureLogger(string filePath)
+    {
+        _filePath = filePath;
+    }
+
+
+    public BaseLogger? CreateLogger(string className)
     {
 
-        return null;
+        //if not configured, return null
+        if (string.IsNullOrEmpty(className))
+        {
+            return null;
+        }
+
+        //Create instance of FileLogger otherwise
+        return new FileLogger(_filePath) { ClassName = className };
     }
 }
