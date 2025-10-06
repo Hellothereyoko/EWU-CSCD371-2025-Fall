@@ -45,10 +45,10 @@ namespace Logger.Tests
 
             // Assert
             // Check that the file exists
-            Assert.IsTrue(File.Exists(_tempFilePath), "The log file was not created.");
+            Assert.IsTrue(File.Exists(_tempFilePath), "Error: The log file was not created.");
             string logContent = File.ReadAllText(_tempFilePath!);
             // Check that the file is not empty
-            Assert.IsFalse(string.IsNullOrEmpty(logContent), "Log file content is empty.");
+            Assert.IsFalse(string.IsNullOrEmpty(logContent), "Error: Log file content is empty.");
         }
 
         [TestMethod]
@@ -67,15 +67,15 @@ namespace Logger.Tests
             string logLine = logContent.TrimEnd(Environment.NewLine.ToCharArray());
 
             // Check core components using StringAssert.Contains
-            StringAssert.Contains(logLine, TestClassName, "Error! The log entry must contain the class name.");
-            StringAssert.Contains(logLine, "Warning", "Error! The log entry must contain the LogLevel.");
-            StringAssert.Contains(logLine, testMessage, "Error! The log entry must contain the message.");
+            StringAssert.Contains(logLine, TestClassName, "Error: The log entry must contain the class name.");
+            StringAssert.Contains(logLine, "Warning", "The log entry must contain the LogLevel.");
+            StringAssert.Contains(logLine, testMessage, "Error: The log entry must contain the message.");
 
             // Check that the log starts with a valid date/time stamp
             string[] parts = logLine.Split(' ');
             // Check if the Date, Time, AM/PM match the proper format.
             Assert.IsTrue(DateTime.TryParse(parts[0] + " " + parts[1] + " " + parts[2], CultureInfo.InvariantCulture, DateTimeStyles.None, out _),
-                "Error! The log entry must start with a valid date format: (MM/dd/yyyy) and valid time format: (HH:mm:ss)");
+                "Error: The log entry must start with a valid date format: (MM/dd/yyyy) and valid time format: (HH:mm:ss)");
         }
 
         [TestMethod]
@@ -150,9 +150,7 @@ namespace Logger.Tests
         public void FileLogger_ThrowsException_IfClassNameIsNull()
         {
             // Arrange & Act
-            // Test that the class throws when the required className is null
-            // This relies on the FileLogger constructor throwing an ArgumentNullException when passed null.
-            //_ = new FileLogger("test/path", null!);
+            // Test that the class throws an exception when the required className is null
             _logFactory?.ConfigureFileLogger(_tempFilePath!);
             var fileLogger = _logFactory.CreateLogger(null!);
             // Assert (Handled by attribute)
