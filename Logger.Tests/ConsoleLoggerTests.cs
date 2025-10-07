@@ -9,7 +9,7 @@ public class ConsoleLoggerTests : IDisposable
 {
     private StringWriter _stringWriter = null!;
     private TextWriter _originalOutput = null!;
-    private bool _disposed = false;
+    private bool _disposed;
 
     [TestInitialize]
     public void Setup()
