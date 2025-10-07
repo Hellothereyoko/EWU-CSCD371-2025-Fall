@@ -7,11 +7,8 @@ public class LogFactory
     private string? _filePath;
     public BaseLogger? CreateLogger(string className)
     {
-        if (className is null)
-        {
-            throw new ArgumentNullException("className");
-        }
-            if (_filePath is null)
+        ArgumentNullException.ThrowIfNull(className);
+        if (_filePath is null)
         {
             return null;
         }
@@ -22,10 +19,7 @@ public class LogFactory
     }
     public void ConfigureFileLogger(string filePath)
     {
-        if (filePath is null)
-        {
-            throw new ArgumentNullException("filePath");
-        }
+        ArgumentNullException.ThrowIfNull(filePath);
         _filePath = filePath;
     }
 }
