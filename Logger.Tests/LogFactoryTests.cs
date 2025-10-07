@@ -74,11 +74,10 @@ namespace Logger.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void ConfigureFileLogger_ThrowsException_ForNullPath()
         {
             // Arrange & Act
-            _logFactory.ConfigureFileLogger(null!);
+            Assert.ThrowsExactly<ArgumentNullException>(() => _logFactory.ConfigureFileLogger(null!));
             // Assert (Handled by attribute)
         }
     }
