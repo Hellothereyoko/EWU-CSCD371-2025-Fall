@@ -19,6 +19,7 @@ public class ConsoleLoggerTests
         Console.SetOut(_stringWriter);
     }
 
+
     [TestCleanup]
     public void Cleanup()
     {
