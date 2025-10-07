@@ -11,10 +11,7 @@ namespace Logger
 
         public FileLogger(string path)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
+            ArgumentNullException.ThrowIfNull("path");
             FilePath = path;
         }
 
