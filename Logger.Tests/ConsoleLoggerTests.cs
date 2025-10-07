@@ -104,7 +104,7 @@ public class ConsoleLoggerTests
 
         // Assert
         string output = _stringWriter.ToString();
-        Assert.IsTrue(output.Contains("/"));
-        Assert.IsTrue(output.Contains(":"));
+        Assert.IsTrue(output.Contains('/'));
+        Assert.IsTrue(output.Contains(':'));
     }
 }
