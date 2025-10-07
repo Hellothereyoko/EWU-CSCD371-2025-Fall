@@ -2,25 +2,27 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Globalization;
+
 
 namespace Logger
 {
     public class FileLogger : BaseLogger
     {
-        public string FilePath;
+        private readonly string _filePath;
 
         public FileLogger(string path)
         {
             ArgumentNullException.ThrowIfNull("path");
-            FilePath = path;
+            _filePath = path;
         }
 
         override
         public void Log(LogLevel logLevel, string message)
         {
-            string timeStamp = DateTime.Now.ToString("G"); //COME BACK TO THIS LINE WITH A BETTER UNDERSTANDING OF ClassName
+            string timeStamp = DateTime.Now.ToString("G", CultureInfo.InvariantCulture); //COME BACK TO THIS LINE WITH A BETTER UNDERSTANDING OF ClassName
             string logText = $"{timeStamp} {ClassName} {logLevel}: {message}";
-            File.AppendAllText(FilePath, logText + Environment.NewLine);
+            File.AppendAllText(_filePath, logText + Environment.NewLine);
         }
     }
 }
