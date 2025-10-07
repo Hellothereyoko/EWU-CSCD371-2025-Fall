@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Logger;
 
-public class FileLogger : BaseLogger
+public class FileLogger : IBaseLogger
 {
     public string ClassName { get; set; } = string.Empty;
     public string FilePath { get; }

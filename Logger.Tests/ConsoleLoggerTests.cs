@@ -1,6 +1,7 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Logger.Tests;
 
@@ -97,5 +98,12 @@ public class ConsoleLoggerTests
             ClassName = nameof(ConsoleLoggerTests)
         };
 
+        // Act
+        logger.Log(LogLevel.Information, "Test message");
+
+        // Assert
+        string output = _stringWriter.ToString();
+        Assert.IsTrue(output.Contains("/"));
+        Assert.IsTrue(output.Contains(":"));
     }
 }

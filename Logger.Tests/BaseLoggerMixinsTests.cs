@@ -12,7 +12,7 @@ public class BaseLoggerMixinsTests
     public void Error_WithNullLogger_ThrowsException()
     {
         // Arrange
-        BaseLogger? logger = null;
+        IBaseLogger? logger = null;
         string message = "";
 
         // Act
@@ -26,7 +26,7 @@ public class BaseLoggerMixinsTests
     public void EnsureLogger_WithNullLogger_ThrowsException()
     {
         // Arrange
-        BaseLogger? logger = null;
+        IBaseLogger? logger = null;
         // Act
         void Act() => BaseLoggerMixins.EnsureLogger(logger);
         // Assert
@@ -94,7 +94,7 @@ public class BaseLoggerMixinsTests
     }
 }
 
-public class TestLogger : BaseLogger
+public class TestLogger : IBaseLogger
 {
     public List<(LogLevel LogLevel, string Message)> LoggedMessages { get; } = new List<(LogLevel, string)>();
 

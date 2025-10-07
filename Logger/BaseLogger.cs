@@ -1,6 +1,6 @@
 ﻿namespace Logger;
 
-public interface BaseLogger
+public interface IBaseLogger
 {
 
     //Auto prop. for class name

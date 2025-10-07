@@ -2,7 +2,7 @@ using System;
 
 namespace Logger;
 
-public class ConsoleLogger : BaseLogger
+public class ConsoleLogger : IBaseLogger
 {
     public string ClassName { get; set; } = string.Empty;
 
