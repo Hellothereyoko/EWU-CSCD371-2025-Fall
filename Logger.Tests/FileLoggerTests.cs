@@ -131,6 +131,7 @@ public class FileLoggerTests
 
         // Assert
         string content = File.ReadAllText(_testFilePath);
+        
         // Timestamp should contain date separator (/) and time separator (:)
         Assert.IsTrue(content.Contains("/"));
         Assert.IsTrue(content.Contains(":"));
