@@ -14,6 +14,10 @@ public class LogFactory
     {
         if (_filePath == null)
             return null;
-        return new FileLogger(className, _filePath);
+            
+        return new FileLogger(_filePath)
+        {
+            ClassName = className
+        };
     }
 }

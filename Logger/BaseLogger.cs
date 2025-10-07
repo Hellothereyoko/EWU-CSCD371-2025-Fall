@@ -1,7 +1,12 @@
 ﻿namespace Logger;
 
-public abstract class BaseLogger
+public interface BaseLogger
 {
-    public abstract void Log(LogLevel logLevel, string message);
-}
 
+    //Auto prop. for class name
+    string ClassName { get; set; }
+
+
+    void Log(LogLevel logLevel, string message);
+
+}
