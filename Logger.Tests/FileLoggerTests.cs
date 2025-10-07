@@ -146,13 +146,12 @@ namespace Logger.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void FileLogger_ThrowsException_IfClassNameIsNull()
         {
             // Arrange & Act
             // Test that the class throws an exception when the required className is null
             _logFactory?.ConfigureFileLogger(_tempFilePath!);
-            var fileLogger = _logFactory.CreateLogger(null!);
+            Assert.ThrowsExactly<ArgumentNullException>(() => _logFactory?.CreateLogger(null!));
             // Assert (Handled by attribute)
         }
     }

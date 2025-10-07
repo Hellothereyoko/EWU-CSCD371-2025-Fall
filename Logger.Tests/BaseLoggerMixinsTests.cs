@@ -9,13 +9,12 @@ namespace Logger.Tests;
 public class BaseLoggerMixinsTests
 {
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Error_WithNullLogger_ThrowsException()
     {
         // Arrange
         BaseLogger? nullLogger = null;
         // Act
-        BaseLoggerMixins.Error(nullLogger, "Test Error message.");
+        Assert.ThrowsExactly<ArgumentNullException>(() => BaseLoggerMixins.Error(nullLogger!, "Test Error message."));
 
         // Assert
         // Empty unless try catch is used.
@@ -38,13 +37,12 @@ public class BaseLoggerMixinsTests
 
     // Test Warnings
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Warning_WithNullLogger_ThrowsException()
     {
         // Arrange
         BaseLogger? nullLogger = null;
         // Act
-        BaseLoggerMixins.Warning(nullLogger, "Test Warning message.");
+        Assert.ThrowsExactly<ArgumentNullException>(() => BaseLoggerMixins.Warning(nullLogger!, "Test Warning message."));
         // Assert
     }
 
@@ -63,13 +61,12 @@ public class BaseLoggerMixinsTests
 
     // Test Information
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Information_WithNullLogger_ThrowsException()
     {
         // Arrange
         BaseLogger? nullLogger = null;
         // Act
-        BaseLoggerMixins.Information(nullLogger, "Test Information message.");
+        Assert.ThrowsExactly<ArgumentNullException>(() => BaseLoggerMixins.Information(nullLogger!, "Test Information message."));
         // Assert
     }
 
@@ -88,13 +85,12 @@ public class BaseLoggerMixinsTests
 
     // Test Debug
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void Debug_WithNullLogger_ThrowsException()
     {
         // Arrange
         BaseLogger? nullLogger = null;
         // Act
-        BaseLoggerMixins.Debug(nullLogger, "Test Debug message.");
+        Assert.ThrowsExactly<ArgumentNullException>(() => BaseLoggerMixins.Debug(nullLogger!, "Test Debug message."));
         // Assert
     }
 
