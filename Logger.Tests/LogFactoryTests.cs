@@ -8,11 +8,12 @@ public class LogFactoryTests
     [TestMethod]
     public void CreateLogger_WithoutBeingConfigured_ReturnsNull()
     {
+        // req4:
         // Testing for: If the file logger has not be configured in the LogFactory, its CreateLogger method should return null
         // Arrange
         LogFactory factory = new();
         // Act
-        var logger = factory.CreateLogger(nameof(LogFactoryTests));
+        BaseLogger? logger = factory.CreateLogger(nameof(LogFactoryTests));
         // Assert
         Assert.IsNull(logger);
     }
@@ -26,8 +27,7 @@ public class LogFactoryTests
         factory.ConfigureFileLogger(expectedPath);
 
         // Act
-        var logger = factory.CreateLogger(nameof(LogFactoryTests));
-
+        BaseLogger? logger = factory.CreateLogger(nameof(LogFactoryTests));
         // Assert
         Assert.IsNotNull(logger);
         Assert.IsInstanceOfType(logger, typeof(FileLogger));

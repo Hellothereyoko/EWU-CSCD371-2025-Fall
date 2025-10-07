@@ -37,7 +37,7 @@ public class BaseLoggerMixinsTests
     public void Error_WithData_LogsMessage()
     {
         // Arrange
-        var logger = new TestLogger();
+        TestLogger logger = new();
 
         // Act
         logger.Error("Message {0}", 42);
@@ -49,10 +49,23 @@ public class BaseLoggerMixinsTests
     }
 
     [TestMethod]
+    public void Error_WithMultipleArguments_FormatsCorrectly()
+    {
+        // Arrange
+        TestLogger logger = new();
+        // Act
+        logger.Error("Values: {0}, {1}", "A", "B");
+        // Assert
+        Assert.AreEqual(1, logger.LoggedMessages.Count);
+        Assert.AreEqual(LogLevel.Error, logger.LoggedMessages[0].LogLevel);
+        Assert.AreEqual("Values: A, B", logger.LoggedMessages[0].Message);
+    }
+
+    [TestMethod]
     public void Warning_WithData_LogsMessage()
     {
         // Arrange
-        var logger = new TestLogger();
+        TestLogger logger = new();
 
         // Act
         logger.Warning("Message {0}", 42);
@@ -67,7 +80,7 @@ public class BaseLoggerMixinsTests
     public void Information_WithData_LogsMessage()
     {
         // Arrange
-        var logger = new TestLogger();
+        TestLogger logger = new();
 
         // Act
         logger.Information("Message {0}", 42);
@@ -82,7 +95,7 @@ public class BaseLoggerMixinsTests
     public void Debug_WithData_LogsMessage()
     {
         // Arrange
-        var logger = new TestLogger();
+        TestLogger logger = new();
 
         // Act
         logger.Debug("Message {0}", 42);
