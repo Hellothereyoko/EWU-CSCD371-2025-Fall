@@ -10,7 +10,7 @@ Read **Chapters 4-6** with an **especially careful read of Chapter 6**. Pay spec
 
 ## Assignment
 
-- There is an existing `BaseLogger` class. It needs an **auto property** to store class name -  the name of the class that calls the `LogFactory`'s `CreateLogger()` method. This class (that calls the `CreateLogger()` method) will identify its name using nameof(), as specified below.) This property should be set in the `LogFactory` using an **object initializer**. ❌✔
+- There is an existing `BaseLogger` class. It needs an **auto property** to store class name -  the name of the class that calls the `LogFactory`'s `CreateLogger()` method. This class (that calls the `CreateLogger()` method) will identify its name using nameof(), as specified below.) This property should be set in the `LogFactory` using an **object initializer**. ✔
 - Create a `FileLogger` that derives from `BaseLogger`. It should take in a path to a file to write the log message to. When its `Log` method is called, it should **append** messages on their own line in the file. The output should include all of the following:
   - The current date/time ✔
   - The name of the class that created the logger ✔
