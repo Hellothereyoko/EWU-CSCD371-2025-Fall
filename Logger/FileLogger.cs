@@ -20,7 +20,7 @@ namespace Logger
         override
         public void Log(LogLevel logLevel, string message)
         {
-            string timeStamp = DateTime.Now.ToString("G", CultureInfo.InvariantCulture); //COME BACK TO THIS LINE WITH A BETTER UNDERSTANDING OF ClassName
+            string timeStamp = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture); //COME BACK TO THIS LINE WITH A BETTER UNDERSTANDING OF ClassName
             string logText = $"{timeStamp} {ClassName} {logLevel}: {message}";
             File.AppendAllText(_filePath, logText + Environment.NewLine);
         }
