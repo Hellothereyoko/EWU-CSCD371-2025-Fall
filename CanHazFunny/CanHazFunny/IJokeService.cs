@@ -5,7 +5,7 @@
         string GetJoke();
     }
 
-    class jokeService : IJokeService
+    public class jokeService : IJokeService
     {
         public string GetJoke()
         {

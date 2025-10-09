@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.IO;
 namespace CanHazFunny
 {
     public interface IOutputService
@@ -9,12 +10,16 @@ namespace CanHazFunny
 
 
 
-    class ConsoleOutputService : IOutputService 
+    public class ConsoleOutputService : IOutputService
     {
+        public string output;
     
         void IOutputService.Write(string message)
         {
-            Console.WriteLine("Response: " + message);
+            output = ("Response: " + message);
+
+            Console.WriteLine(output);
+
         }
     }
 }

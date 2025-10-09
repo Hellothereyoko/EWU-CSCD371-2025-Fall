@@ -8,7 +8,7 @@ class Program
 
         //Ask if they wanna hear a joke
         Console.Clear();
-        Console.WriteLine("Wanna hear a joke? (y/n): ");
+        Console.Write("Wanna hear a joke? (y/n): ");
 
         //Get their answer
         string answer = Console.ReadLine() ?? "n";
