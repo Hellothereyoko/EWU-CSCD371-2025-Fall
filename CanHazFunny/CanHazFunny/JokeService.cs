@@ -9,11 +9,14 @@ public class JokeService : IJokeService
 
     public string GetJoke()
     {
+        //Could use a bool to repeat this function until a joke w/o "Chuck Norris" is present
+
         string joke = HttpClient.GetStringAsync("https://geek-jokes.sameerkumar.website/api").Result;
 
-        if (joke.Contains("Chuck Norris")|| joke.Contains("Chuck") || joke.Contains("Norris"))
+
+        if (joke.Contains("Chuck Norris") || joke.Contains("Chuck") || joke.Contains("Norris"))
         {
-            
+
             joke = "No Chuck Norris Jokes!";
             return joke;
         }

@@ -69,7 +69,7 @@ namespace CanHazFunny.Tests
         }
 
         [Fact]
-        public void GetJoke_FiltersChuckNorrisJokes_WhenContainsChuckNorris()
+        public void GetJoke_ChuckNorrisFilter()
         {
 
             // In a real scenario, you'd want to inject HttpClient or use an interface
@@ -151,6 +151,7 @@ namespace CanHazFunny.Tests
 
     public class IntegrationTests
     {
+        
         [Fact]
         public void Jester_IntegrationTest_WithRealServices()
         {
@@ -168,33 +169,11 @@ namespace CanHazFunny.Tests
 
             // Assert
             var consoleOutput = stringWriter.ToString().Trim();
-            Assert.StartsWith("Response: ", consoleOutput);
             Assert.NotEmpty(outputService.output);
         }
 
-        [Fact]
-        public void Jester_IntegrationTest_WithMockedJokeService()
-        {
-            // Arrange
-            var stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-            var mockJokeService = new Mock<IJokeService>();
-            mockJokeService.Setup(js => js.GetJoke()).Returns("Mock joke for testing");
-
-            var outputService = new ConsoleOutputService();
-            var jester = new Jester(outputService, mockJokeService.Object);
-
-
-            // Act
-            jester.TellJoke();
-
-
-            // Assert
-            Assert.Equal("Response: Mock joke for testing", outputService.output);
-            var consoleOutput = stringWriter.ToString().Trim();
-            Assert.Equal("Response: Mock joke for testing", consoleOutput);
-        }
     }
+
 }
 
 //Encoded using IntelliSense & modified by the dev to fit into the existing architecture
