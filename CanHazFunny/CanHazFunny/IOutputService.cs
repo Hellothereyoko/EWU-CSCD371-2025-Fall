@@ -8,11 +8,12 @@ namespace CanHazFunny
     }
 
 
-    class ConsoleOutputService : IOutputService
+
+    class ConsoleOutputService : IOutputService 
     {
-        public void Write(string message)
+    
+        void IOutputService.Write(string message)
         {
-            
             Console.WriteLine(message);
         }
     }

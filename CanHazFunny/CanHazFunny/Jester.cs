@@ -5,21 +5,24 @@ using System.Net.Http;
 namespace CanHazFunny;
 
 
-public class Jester
+public class Jester(IOutputService outputService, IJokeService jokeService)
 
 {
+   
 
     //getJoke method that returns a string
-    string getJoke()
+    internal string getJoke()
     {
-        var jokeService = new JokeService();
         return jokeService.GetJoke();
     }
 
+
     //tellJoke method that writes the joke to the console
-    void tellJoke()
+    internal void TellJoke()
     {
-        Console.WriteLine(getJoke());
+        outputService.Write(getJoke());
+        return;
+
     }
 
 
