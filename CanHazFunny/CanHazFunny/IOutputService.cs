@@ -14,7 +14,7 @@ namespace CanHazFunny
     
         void IOutputService.Write(string message)
         {
-            Console.WriteLine(message);
+            Console.WriteLine("Response: " + message);
         }
     }
 }
