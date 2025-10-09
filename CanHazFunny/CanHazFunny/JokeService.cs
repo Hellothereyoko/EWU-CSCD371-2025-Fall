@@ -11,8 +11,9 @@ public class JokeService : IJokeService
     {
         string joke = HttpClient.GetStringAsync("https://geek-jokes.sameerkumar.website/api").Result;
 
-        if (joke.Contains("Chuck Norris"))
+        if (joke.Contains("Chuck Norris")|| joke.Contains("Chuck") || joke.Contains("Norris"))
         {
+            
             joke = "No Chuck Norris Jokes!";
             return joke;
         }
