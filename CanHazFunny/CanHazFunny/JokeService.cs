@@ -9,7 +9,7 @@ public class JokeService : IJokeService
 
     public string GetJoke()
     {
-        //Could use a bool to repeat this function until a joke w/o "Chuck Norris" is present
+        /*//Could use a bool to repeat this function until a joke w/o "Chuck Norris" is present
 
         string joke = HttpClient.GetStringAsync("https://geek-jokes.sameerkumar.website/api").Result;
 
@@ -20,6 +20,18 @@ public class JokeService : IJokeService
             joke = "No Chuck Norris Jokes!";
             return joke;
         }
-        return joke;
+        else
+            return joke;*/
+
+        while (true)
+        {
+            string joke = HttpClient.GetStringAsync("https://geek-jokes.sameerkumar.website/api").Result;
+            
+            if (!joke.Contains("Chuck Norris"))
+            {
+                return joke;
+            }
+            //If jokes contain "Chuck Norris", loop again to get another joke
+        }   
     }
 }

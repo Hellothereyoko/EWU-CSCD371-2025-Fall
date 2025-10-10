@@ -12,7 +12,7 @@ namespace CanHazFunny
 
     public class ConsoleOutputService : IOutputService
     {
-        public string output;
+        public string? output;
     
         void IOutputService.Write(string message)
         {
