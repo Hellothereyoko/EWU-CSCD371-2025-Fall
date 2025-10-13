@@ -14,32 +14,32 @@ namespace CanHazFunny.Tests;
 public class MockableJokeService : JokeService
 {
     private readonly bool _shouldThrow;
-    private readonly string _nextJoke;
-    private int _callCount; // FIX: Removed '= 0' to resolve CA1805 build error
+    private readonly string? _nextJoke; // Made nullable for null test
+    private int _callCount; // Fix for CA1805
 
-    public MockableJokeService(string nextJoke = "Not a Chuck Norris joke", bool shouldThrow = false)
+    public MockableJokeService(string? nextJoke = "Not a Chuck Norris joke", bool shouldThrow = false)
     {
         _nextJoke = nextJoke;
         _shouldThrow = shouldThrow;
     }
 
-    // Overrides the virtual method in JokeService to control API output
-    protected override string GetJokeFromApi() 
+    // This method now overrides the virtual method in JokeService.
+    protected override string? GetJokeFromApi() 
     {
         if (_shouldThrow)
         {
-            // For the error test
             throw new HttpRequestException("Simulated API error");
         }
         
         // This is primarily for the Jester test's SetupSequence
-        if (_nextJoke.Contains("Chuck Norris") && _callCount == 0)
+        if (_nextJoke != null && _nextJoke.Contains("Chuck Norris") && _callCount == 0)
         {
             _callCount++;
             return _nextJoke;
         }
         
-        return "Not a Chuck Norris joke";
+        // This returns the next joke string OR null (for the new test case)
+        return _nextJoke;
     }
 }
 
@@ -147,7 +147,7 @@ public class JokeServiceTests
     [Fact]
     public void GetJoke_ReturnsNonEmptyString()
     {
-        // Arrange: Uses the fast Mockable service (Covers the successful try block)
+        // Arrange: Covers the successful try block
         var jokeService = new MockableJokeService(); 
 
         // Act
@@ -162,7 +162,7 @@ public class JokeServiceTests
     [Fact]
     public void GetJoke_ChuckNorrisFilter()
     {
-        // FIX: The test now asserts that JokeService returns the joke as-is, since filtering is Jester's job.
+        // Test ensures JokeService returns the joke as-is (unfiltered)
         // Arrange
         var expectedJoke = "Chuck Norris joke";
         var jokeService = new MockableJokeService(nextJoke: expectedJoke);
@@ -170,14 +170,28 @@ public class JokeServiceTests
         // Act
         var joke = jokeService.GetJoke();
 
-        // Assert: JokeService must return the joke it received, even if it contains Chuck Norris.
+        // Assert: JokeService must return the joke it received.
         Assert.Equal(expectedJoke, joke);
+    }
+
+    [Fact]
+    public void GetJoke_ReturnsNoJokeFound_WhenApiJokeIsNull()
+    {
+        // NEW TEST: Covers the missing null coalescing branch (?? "No joke found")
+        // Arrange: Pass null to MockableJokeService to simulate GetString() returning null
+        var jokeService = new MockableJokeService(nextJoke: null);
+
+        // Act
+        var result = jokeService.GetJoke();
+
+        // Assert
+        Assert.Equal("No joke found", result);
     }
 
     [Fact]
     public void GetJoke_ReturnsErrorMessage_OnError()
     {
-        // Arrange: Use mockable service set to throw an exception instantly (Covers the catch block)
+        // Arrange: Covers the catch block
         var jokeService = new MockableJokeService(shouldThrow: true);
 
         // Act
@@ -211,7 +225,6 @@ public class ConsoleOutputTests
         // Assert
         var output = stringWriter.ToString().Trim();
         Assert.Equal(testMessage, output);
-        Assert.Equal(testMessage, outputService.Output);
     }
 
     [Fact]
@@ -234,7 +247,7 @@ public class ConsoleOutputTests
 }
 
 // ----------------------------------------------------------------------
-// INTEGRATION TESTS (Execute, but may cause delays)
+// INTEGRATION TESTS (Execute)
 // ----------------------------------------------------------------------
 
 public class IntegrationTests

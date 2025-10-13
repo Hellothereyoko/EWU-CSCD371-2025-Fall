@@ -12,23 +12,28 @@ public class JokeService : IJokeService
     {
         try
         {
-            // NEW: No filtering or looping here. Just get one joke.
-            return GetJokeFromApi();
+            // Calls the mockable method, which handles the network call
+            string? joke = GetJokeFromApi(); 
+            
+            // Handles the branch where GetString() returns null (the final missing branch coverage)
+            return joke ?? "No joke found"; 
         }
-        // Catch specific network/JSON exceptions (Covers the required branch)
+        // Handles network or JSON parsing errors
         catch (Exception ex) when (ex is HttpRequestException || ex is JsonException) 
         {
             return "Error retrieving joke. Please try again later";
         }
     }
 
-    protected virtual string GetJokeFromApi()
+    // NEW: This is the method the Mockable class in JesterTests.cs will now successfully override.
+    protected virtual string? GetJokeFromApi() 
     {
         // This is the production code that makes the actual network call
         string json = HttpClient.GetStringAsync("https://geek-jokes.sameerkumar.website/api?format=json").Result;
 
         using var doc = JsonDocument.Parse(json);
 
-        return doc.RootElement.GetProperty("joke").GetString() ?? "No joke found";
+        // This returns a string or null, feeding the null check in GetJoke()
+        return doc.RootElement.GetProperty("joke").GetString(); 
     }
 }
