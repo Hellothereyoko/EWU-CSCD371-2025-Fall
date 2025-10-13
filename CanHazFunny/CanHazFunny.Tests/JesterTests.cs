@@ -151,7 +151,7 @@ namespace CanHazFunny.Tests
 
     public class IntegrationTests
     {
-        
+
         [Fact]
         public void Jester_IntegrationTest_WithRealServices()
         {
@@ -175,5 +175,6 @@ namespace CanHazFunny.Tests
     }
 
 }
+
 
 //Encoded using IntelliSense & modified by the dev to fit into the existing architecture
