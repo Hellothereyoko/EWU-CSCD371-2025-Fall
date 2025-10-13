@@ -1,4 +1,3 @@
-
 name: Build and Test .NET
 
 on:
@@ -10,5 +9,7 @@ jobs:
     uses: IntelliTect-Samples/EWU-CSCD371-2025-Fall/.github/workflows/build-and-test.yml@main
     with:
       working-directory: './CanHazFunny/'
+      # ADD THIS LINE if the reusable workflow has a 'solution-file' input
+      solution-file: 'CanHazFunny.sln' 
       check-formatting: false
       add-analyzers: false
