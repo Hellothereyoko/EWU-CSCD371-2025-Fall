@@ -3,8 +3,8 @@ using Moq;
 using System;
 using System.IO;
 
-namespace CanHazFunny.Tests
-{
+namespace CanHazFunny.Tests;
+
     public class JesterTests
     {
         [Fact]
@@ -108,7 +108,7 @@ namespace CanHazFunny.Tests
             // Assert
             var output = stringWriter.ToString().Trim();
             Assert.Equal("Response: " + testMessage, output);
-            Assert.Equal("Response: " + testMessage, outputService.output);
+            Assert.Equal("Response: " + testMessage, outputService.Output);
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace CanHazFunny.Tests
 
 
             // Assert
-            Assert.Equal("Response: " + testMessage, outputService.output);
+            Assert.Equal("Response: " + testMessage, outputService.Output);
         }
     }
 
@@ -169,12 +169,9 @@ namespace CanHazFunny.Tests
 
             // Assert
             var consoleOutput = stringWriter.ToString().Trim();
-            Assert.NotEmpty(outputService.output!);
+            Assert.NotEmpty(outputService.Output!);
         }
 
     }
-
-}
-
 
 //Encoded using IntelliSense & modified by the dev to fit into the existing architecture
