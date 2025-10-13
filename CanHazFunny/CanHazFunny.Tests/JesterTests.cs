@@ -15,7 +15,7 @@ public class MockableJokeService : JokeService
 {
     private readonly bool _shouldThrow;
     private readonly string _nextJoke;
-    private int _callCount = 0;
+    private int _callCount; // FIX: Removed '= 0' to resolve CA1805 build error
 
     public MockableJokeService(string nextJoke = "Not a Chuck Norris joke", bool shouldThrow = false)
     {
@@ -32,15 +32,14 @@ public class MockableJokeService : JokeService
             throw new HttpRequestException("Simulated API error");
         }
         
-        // Logic for the Chuck Norris filter test:
-        // Returns the Chuck Norris joke ONLY on the first call, then returns clean.
+        // This is primarily for the Jester test's SetupSequence
         if (_nextJoke.Contains("Chuck Norris") && _callCount == 0)
         {
             _callCount++;
-            return _nextJoke; // 1st call: Returns Chuck Norris joke
+            return _nextJoke;
         }
         
-        return "Not a Chuck Norris joke"; // 2nd call: Returns clean joke, breaking the loop
+        return "Not a Chuck Norris joke";
     }
 }
 
@@ -112,36 +111,31 @@ public class JesterTests
         Assert.Throws<ArgumentNullException>(() => new Jester(mockOutputService.Object, null!));
     }
 
-  
     [Fact]
-public void TellJoke_SkipsChuckNorrisJoke_AndGetsNext()
-{
-    // Arrange
-    var mockJokeService = new Mock<IJokeService>();
-    var mockOutputService = new Mock<IOutput>(); // Ensure output service is mocked
+    public void TellJoke_SkipsChuckNorrisJoke_AndGetsNext()
+    {
+        // Arrange
+        var mockJokeService = new Mock<IJokeService>();
+        var mockOutputService = new Mock<IOutput>();
 
-    var chuckJoke = "Chuck Norris always wins";
-    var goodJoke = "A programmer walks into a bar";
+        var chuckJoke = "Chuck Norris always wins";
+        var goodJoke = "A programmer walks into a bar";
 
-    // Setup the mock to return Chuck Norris first, then a valid joke
-    mockJokeService.SetupSequence(js => js.GetJoke())
-        .Returns(chuckJoke) 
-        .Returns(goodJoke);
-        
-    // Use the mocked output service
-    var jester = new Jester(mockOutputService.Object, mockJokeService.Object);
+        // Setup the mock to return Chuck Norris first, then a valid joke
+        mockJokeService.SetupSequence(js => js.GetJoke())
+            .Returns(chuckJoke) 
+            .Returns(goodJoke);
+            
+        var jester = new Jester(mockOutputService.Object, mockJokeService.Object);
 
-    // Act
-    jester.TellJoke();
+        // Act
+        jester.TellJoke();
 
-    // Assert
-    // This now passes because Jester.TellJoke() contains the filtering loop.
-    mockJokeService.Verify(js => js.GetJoke(), Times.Exactly(2));
-
-    // NEW ASSERTION: Verify the good joke was the one written
-    mockOutputService.Verify(os => os.WriteLine(goodJoke), Times.Once);
-    mockOutputService.Verify(os => os.WriteLine(chuckJoke), Times.Never);
-}
+        // Assert
+        mockJokeService.Verify(js => js.GetJoke(), Times.Exactly(2));
+        mockOutputService.Verify(os => os.WriteLine(goodJoke), Times.Once);
+        mockOutputService.Verify(os => os.WriteLine(chuckJoke), Times.Never);
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -153,8 +147,8 @@ public class JokeServiceTests
     [Fact]
     public void GetJoke_ReturnsNonEmptyString()
     {
-        // Arrange: Uses the fast Mockable service
-        var jokeService = new MockableJokeService();
+        // Arrange: Uses the fast Mockable service (Covers the successful try block)
+        var jokeService = new MockableJokeService(); 
 
         // Act
         var joke = jokeService.GetJoke();
@@ -165,28 +159,25 @@ public class JokeServiceTests
         Assert.NotEmpty(joke);
     }
 
-
     [Fact]
     public void GetJoke_ChuckNorrisFilter()
     {
-
-        // Arrange: JokeService should receive this string from the mock API call.
+        // FIX: The test now asserts that JokeService returns the joke as-is, since filtering is Jester's job.
+        // Arrange
         var expectedJoke = "Chuck Norris joke";
         var jokeService = new MockableJokeService(nextJoke: expectedJoke);
-    
+        
         // Act
         var joke = jokeService.GetJoke();
 
-        // Assert: Since filtering is now Jester's job, JokeService must return the joke it received.
-        // The previous assertions (Assert.DoesNotContain/Assert.Equal to "Not a Chuck Norris joke") were removed.
+        // Assert: JokeService must return the joke it received, even if it contains Chuck Norris.
         Assert.Equal(expectedJoke, joke);
     }
-
 
     [Fact]
     public void GetJoke_ReturnsErrorMessage_OnError()
     {
-        // Arrange: Use mockable service set to throw an exception instantly
+        // Arrange: Use mockable service set to throw an exception instantly (Covers the catch block)
         var jokeService = new MockableJokeService(shouldThrow: true);
 
         // Act
@@ -243,7 +234,7 @@ public class ConsoleOutputTests
 }
 
 // ----------------------------------------------------------------------
-// INTEGRATION TESTS (These tests will now execute and cause delays)
+// INTEGRATION TESTS (Execute, but may cause delays)
 // ----------------------------------------------------------------------
 
 public class IntegrationTests
@@ -251,7 +242,7 @@ public class IntegrationTests
     [Fact]
     public void JokeServiceImplementation_GetJoke_CallsUnderlyingJokeService()
     {
-        // This test makes a real network call (SLOOOOOW)
+        // This test makes a real network call
         var jokeServiceImpl = new JokeService();
 
 
@@ -267,7 +258,7 @@ public class IntegrationTests
     [Fact]
     public void Jester_IntegrationTest_WithRealServices()
     {
-        // This test makes a real network call (SLOOOOOW)
+        // This test makes a real network call
         var stringWriter = new StringWriter();
         Console.SetOut(stringWriter);
         var outputService = new ConsoleOutput();
