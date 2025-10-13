@@ -169,7 +169,7 @@ namespace CanHazFunny.Tests
 
             // Assert
             var consoleOutput = stringWriter.ToString().Trim();
-            Assert.NotEmpty(outputService.output);
+            Assert.NotEmpty(outputService.output!);
         }
 
     }
