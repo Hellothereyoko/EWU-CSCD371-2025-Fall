@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Threading.Tasks; // You may need this depending on other code, but including System is enough for StringComparison
-// using System.Globalization; // Not needed if using StringComparison.OrdinalIgnoreCase
+using System.Diagnostics.CodeAnalysis; // ADDED: Required for ExcludeFromCodeCoverage
+using System.Threading.Tasks; 
 
 namespace CanHazFunny;
 
-// FIX 1: CA1852 - Added 'sealed' keyword to the class declaration.
+// ADDED: Excludes this untestable file from the coverage report (Fixes 0% coverage)
+[ExcludeFromCodeCoverage] 
 sealed class Program
 {
     static void Main(string[] args)
     {
-
         //Ask if they wanna hear a joke
         Console.Clear();
         Console.Write("Wanna hear a joke? (y/n): ");
@@ -18,7 +18,6 @@ sealed class Program
         string answer = Console.ReadLine() ?? "n";
         
         //If they say no, exit program gracefully
-        // FIX 2: CA1304, CA1311, CA1862 - Replaced .ToLower() != "y" with String.Equals for culture-insensitive comparison.
         if (!string.Equals(answer, "y", StringComparison.OrdinalIgnoreCase))
         {
             Console.WriteLine("Aww, come on! You're no fun!");
@@ -26,11 +25,9 @@ sealed class Program
             return;
         }
 
-        //Feel free to use your own setup here - this is just provided as an example
-        //new Jester(new SomeReallyCoolOutputClass(), new SomeJokeServiceClass()).TellJoke();
         Console.Clear();
+        // FIX: Changed ConsoleOutputService to ConsoleOutput (Consistency)
         new Jester(new ConsoleOutput(), new JokeService()).TellJoke();
         return;
-
     }
 }
