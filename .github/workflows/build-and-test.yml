@@ -8,13 +8,7 @@ jobs:
     name: Run Shared Build and Test Workflow
     uses: IntelliTect-Samples/EWU-CSCD371-2025-Fall/.github/workflows/build-and-test.yml@main
     with:
-      # CHANGE THIS: Use the root directory if the .sln file is there
+      # Change the working directory to the repository root, where CanHazFunny.sln is located.
       working-directory: './' 
       check-formatting: false
       add-analyzers: false
-
-
-
-
-
-      
