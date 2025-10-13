@@ -1,48 +1,14 @@
-# .github/workflows/build-and-test.yml (The file you need to modify/check)
 
-name: Reusable Build and Test
+name: Build and Test .NET
 
 on:
-  workflow_call:
-    inputs:
-      working-directory:
-        required: true
-        type: string
-        description: 'The subdirectory containing the solution/project files.'
-      check-formatting:
-        required: true
-        type: boolean
-      add-analyzers:
-        required: true
-        type: boolean
+  pull_request_target:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        
-      # 1. DOTNET RESTORE STEP
-      - name: Run dotnet restore
-        run: dotnet restore
-        # CRITICAL FIX: The working-directory key must be here
-        working-directory: ${{ inputs.working-directory }} 
-
-      # 2. DOTNET BUILD STEP
-      - name: Run dotnet build
-        run: dotnet build --no-restore # --no-restore ensures we use the previous restore
-        # CRITICAL FIX: The working-directory key must be here
-        working-directory: ${{ inputs.working-directory }} 
-        
-      # 3. DOTNET TEST STEP
-      - name: Run dotnet test
-        run: dotnet test --no-build # --no-build ensures we use the previous build
-        # CRITICAL FIX: The working-directory key must be here
-        working-directory: ${{ inputs.working-directory }}
-
-      # ... any other relevant steps (like formatting checks)
-
-
-
-      
+    name: Run Shared Build and Test Workflow
+    uses: IntelliTect-Samples/EWU-CSCD371-2025-Fall/.github/workflows/build-and-test.yml@main
+    with:
+      working-directory: './CanHazFunny/'
+      check-formatting: false
+      add-analyzers: false
