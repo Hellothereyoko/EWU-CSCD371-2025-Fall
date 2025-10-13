@@ -8,7 +8,12 @@ jobs:
     name: Run Shared Build and Test Workflow
     uses: IntelliTect-Samples/EWU-CSCD371-2025-Fall/.github/workflows/build-and-test.yml@main
     with:
-      # Change the working directory to the repository root, where CanHazFunny.sln is located.
+      # Explicitly set working directory to the repository root
       working-directory: './' 
+      # Since the shared workflow is likely running:
+      # dotnet restore [working-directory]/[solution-file]
+      # The solution file path might be needed if the shared workflow supports it.
+      # If the shared workflow has an input named 'solution-file', use it:
+      # solution-file: 'CanHazFunny.sln' 
       check-formatting: false
       add-analyzers: false
