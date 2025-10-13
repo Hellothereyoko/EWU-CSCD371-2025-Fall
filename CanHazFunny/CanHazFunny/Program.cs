@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks; // You may need this depending on other code, but including System is enough for StringComparison
+// using System.Globalization; // Not needed if using StringComparison.OrdinalIgnoreCase
+
 namespace CanHazFunny;
 
-class Program
+// FIX 1: CA1852 - Added 'sealed' keyword to the class declaration.
+sealed class Program
 {
     static void Main(string[] args)
     {
@@ -14,7 +18,8 @@ class Program
         string answer = Console.ReadLine() ?? "n";
         
         //If they say no, exit program gracefully
-        if (answer.ToLower() != "y")
+        // FIX 2: CA1304, CA1311, CA1862 - Replaced .ToLower() != "y" with String.Equals for culture-insensitive comparison.
+        if (!string.Equals(answer, "y", StringComparison.OrdinalIgnoreCase))
         {
             Console.WriteLine("Aww, come on! You're no fun!");
             System.Environment.Exit(0);
