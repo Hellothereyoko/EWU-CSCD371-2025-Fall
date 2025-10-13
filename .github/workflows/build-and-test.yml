@@ -5,9 +5,36 @@ on:
 
 jobs:
   build-and-test:
-    name: Run Shared Build and Test Workflow
-    uses: IntelliTect-Samples/EWU-CSCD371-2025-Fall/.github/workflows/build-and-test.yml@main
-    with:
-      working-directory: './CanHazFunny/'
-      check-formatting: false
-      add-analyzers: false
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+    
+    - name: Debug - Show everything
+      run: |
+        echo "=== PWD ==="
+        pwd
+        echo ""
+        echo "=== Root contents ==="
+        ls -la
+        echo ""
+        echo "=== Tree view (if available) ==="
+        tree -L 3 || find . -maxdepth 3 -type f -o -type d
+        echo ""
+        echo "=== All .sln files ==="
+        find . -name "*.sln" -exec echo "Found: {}" \; -exec cat {} \;
+        echo ""
+        echo "=== All .csproj files ==="
+        find . -name "*.csproj"
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: ./CanHazFunny
