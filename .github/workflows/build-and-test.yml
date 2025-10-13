@@ -5,23 +5,9 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-    
-    - name: Debug - List files
-      run: |
-        echo "=== Repository root ==="
-        ls -la
-        echo ""
-        echo "=== CanHazFunny directory ==="
-        ls -la ./CanHazFunny/
-        echo ""
-        echo "=== Find all .sln and .csproj files ==="
-        find . -name "*.sln" -o -name "*.csproj"
-    
-    - name: Setup .NET
-      uses: actions/setup-d
+    name: Run Shared Build and Test Workflow
+    uses: IntelliTect-Samples/EWU-CSCD371-2025-Fall/.github/workflows/build-and-test.yml@main
+    with:
+      working-directory: './CanHazFunny/'
+      check-formatting: false
+      add-analyzers: false
