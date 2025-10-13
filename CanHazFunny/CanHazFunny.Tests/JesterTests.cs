@@ -5,173 +5,173 @@ using System.IO;
 
 namespace CanHazFunny.Tests;
 
-    public class JesterTests
+public class JesterTests
+{
+    [Fact]
+    public void GetJoke_ReturnsJokeFromJokeService()
     {
-        [Fact]
-        public void GetJoke_ReturnsJokeFromJokeService()
-        {
-            // Arrange
-            var mockJokeService = new Mock<IJokeService>();
-            var mockOutputService = new Mock<IOutputService>();
-            var expectedJoke = "Why did the programmer quit? He didn't get arrays!";
+        // Arrange
+        var mockJokeService = new Mock<IJokeService>();
+        var mockOutputService = new Mock<IOutput>(); // FIX: Interface name change
+        var expectedJoke = "Why did the programmer quit? He didn't get arrays!";
 
-            mockJokeService.Setup(js => js.GetJoke()).Returns(expectedJoke);
-            var jester = new Jester(mockOutputService.Object, mockJokeService.Object);
+        mockJokeService.Setup(js => js.GetJoke()).Returns(expectedJoke);
+        var jester = new Jester(mockOutputService.Object, mockJokeService.Object);
 
 
-            // Act
-            var result = jester.getJoke();
+        // Act
+        var result = jester.GetJoke(); // FIX: Method name change to GetJoke()
 
 
-            // Assert
-            Assert.Equal(expectedJoke, result);
-            mockJokeService.Verify(js => js.GetJoke(), Times.Once);
-        }
-
-        [Fact]
-        public void TellJoke_CallsOutputServiceWithJoke()
-        {
-            // Arrange
-            var mockJokeService = new Mock<IJokeService>();
-            var mockOutputService = new Mock<IOutputService>();
-            var testJoke = "Test joke";
-
-            mockJokeService.Setup(js => js.GetJoke()).Returns(testJoke);
-            var jester = new Jester(mockOutputService.Object, mockJokeService.Object);
-
-
-            // Act
-            jester.TellJoke();
-
-
-            // Assert
-            mockOutputService.Verify(os => os.Write(testJoke), Times.Once);
-            mockJokeService.Verify(js => js.GetJoke(), Times.Once);
-        }
+        // Assert
+        Assert.Equal(expectedJoke, result);
+        mockJokeService.Verify(js => js.GetJoke(), Times.Once);
     }
 
-    public class JokeServiceTests
+    [Fact]
+    public void TellJoke_CallsOutputServiceWithJoke()
     {
-        [Fact]
-        public void GetJoke_ReturnsNonEmptyString()
-        {
-            // Arrange
-            var jokeService = new JokeService();
+        // Arrange
+        var mockJokeService = new Mock<IJokeService>();
+        var mockOutputService = new Mock<IOutput>(); // FIX: Interface name change
+        var testJoke = "Test joke";
+
+        mockJokeService.Setup(js => js.GetJoke()).Returns(testJoke);
+        var jester = new Jester(mockOutputService.Object, mockJokeService.Object);
 
 
-            // Act
-            var joke = jokeService.GetJoke();
+        // Act
+        jester.TellJoke();
 
 
-            // Assert
-            Assert.NotNull(joke);
-            Assert.NotEmpty(joke);
-        }
+        // Assert
+        // FIX: Method call changed from Write to WriteLine
+        mockOutputService.Verify(os => os.WriteLine(testJoke), Times.Once);
+        mockJokeService.Verify(js => js.GetJoke(), Times.Once);
+    }
+}
 
-        [Fact]
-        public void GetJoke_ChuckNorrisFilter()
-        {
+public class JokeServiceTests
+{
+    [Fact]
+    public void GetJoke_ReturnsNonEmptyString()
+    {
+        // Arrange
+        var jokeService = new JokeService();
 
-            // In a real scenario, you'd want to inject HttpClient or use an interface
-            // For now, we can test the logic indirectly
 
-            var jokeService = new JokeService();
-            var joke = jokeService.GetJoke();
+        // Act
+        var joke = jokeService.GetJoke();
 
-            // Assert that if we get a joke, it shouldn't contain Chuck Norris
-            // or it should be the filtered message
-            if (joke != "No Chuck Norris Jokes!")
-            {
-                Assert.DoesNotContain("Chuck Norris", joke);
-                /*Assert.DoesNotContain("Chuck", joke);
-                Assert.DoesNotContain("Norris", joke);*/
-            }
-        }
+
+        // Assert
+        Assert.NotNull(joke);
+        Assert.NotEmpty(joke);
     }
 
-    public class ConsoleOutputServiceTests
+    [Fact]
+    public void GetJoke_ChuckNorrisFilter()
     {
-        [Fact]
-        public void Write_FormatsMessageWithResponsePrefix()
+        // In a real scenario, you'd want to inject HttpClient or use an interface
+        // For now, we can test the logic indirectly
+
+        var jokeService = new JokeService();
+        var joke = jokeService.GetJoke();
+
+        // Assert that if we get a joke, it shouldn't contain Chuck Norris
+        // or it should be the filtered message
+        if (joke != "No Chuck Norris Jokes!")
         {
-            // Arrange
-            var outputService = new ConsoleOutputService();
-            var testMessage = "This is a test joke";
-            var stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-
-
-            // Act
-            ((IOutputService)outputService).Write(testMessage);
-
-
-            // Assert
-            var output = stringWriter.ToString().Trim();
-            Assert.Equal("Response: " + testMessage, output);
-            Assert.Equal("Response: " + testMessage, outputService.Output);
-        }
-
-        [Fact]
-        public void Write_StoresOutputInPublicField()
-        {
-            // Arrange
-            var outputService = new ConsoleOutputService();
-            var testMessage = "Another test";
-            var stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-
-
-            // Act
-            ((IOutputService)outputService).Write(testMessage);
-
-
-            // Assert
-            Assert.Equal("Response: " + testMessage, outputService.Output);
+            Assert.DoesNotContain("Chuck Norris", joke);
         }
     }
+}
 
-    public class IJokeServiceImplementationTests
+public class ConsoleOutputTests
+{
+    [Fact]
+    public void WriteLine_FormatsMessageCorrectly()
     {
-        [Fact]
-        public void JokeServiceImplementation_GetJoke_CallsUnderlyingJokeService()
-        {
-            // Arrange
-            var jokeServiceImpl = new JokeService();
+        // Arrange
+        var outputService = new ConsoleOutput(); // FIX: Class name change
+        var testMessage = "This is a test joke";
+        var stringWriter = new StringWriter();
+        Console.SetOut(stringWriter);
 
 
-            // Act
-            var joke = jokeServiceImpl.GetJoke();
+        // Act
+        // FIX: Method name changed from Write to WriteLine
+        ((IOutput)outputService).WriteLine(testMessage);
 
 
-            // Assert
-            Assert.NotNull(joke);
-            Assert.NotEmpty(joke);
-        }
+        // Assert
+        var output = stringWriter.ToString().Trim();
+        Assert.Equal(testMessage, output);
+        // FIX: Output property is now string? and holds the raw message
+        Assert.Equal(testMessage, outputService.Output);
     }
 
-    public class IntegrationTests
+    [Fact]
+    public void WriteLine_StoresOutputInPublicProperty()
     {
-
-        [Fact]
-        public void Jester_IntegrationTest_WithRealServices()
-        {
-            // Arrange
-            var stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-            var outputService = new ConsoleOutputService();
-            var jokeService = new JokeService();
-            var jester = new Jester(outputService, jokeService);
+        // Arrange
+        var outputService = new ConsoleOutput(); // FIX: Class name change
+        var testMessage = "Another test";
+        var stringWriter = new StringWriter();
+        Console.SetOut(stringWriter);
 
 
-            // Act
-            jester.TellJoke();
+        // Act
+        // FIX: Method name changed from Write to WriteLine
+        ((IOutput)outputService).WriteLine(testMessage);
 
 
-            // Assert
-            var consoleOutput = stringWriter.ToString().Trim();
-            Assert.NotEmpty(outputService.Output!);
-        }
-
+        // Assert
+        // FIX: Output property is now string? and holds the raw message
+        Assert.Equal(testMessage, outputService.Output);
     }
+}
 
-//Encoded using IntelliSense & modified by the dev to fit into the existing architecture
+public class IJokeServiceImplementationTests
+{
+    [Fact]
+    public void JokeServiceImplementation_GetJoke_CallsUnderlyingJokeService()
+    {
+        // Arrange
+        var jokeServiceImpl = new JokeService();
+
+
+        // Act
+        var joke = jokeServiceImpl.GetJoke();
+
+
+        // Assert
+        Assert.NotNull(joke);
+        Assert.NotEmpty(joke);
+    }
+}
+
+public class IntegrationTests
+{
+
+    [Fact]
+    public void Jester_IntegrationTest_WithRealServices()
+    {
+        // Arrange
+        var stringWriter = new StringWriter();
+        Console.SetOut(stringWriter);
+        var outputService = new ConsoleOutput(); // FIX: Class name change
+        var jokeService = new JokeService();
+        var jester = new Jester(outputService, jokeService);
+
+
+        // Act
+        jester.TellJoke();
+
+
+        // Assert
+        var consoleOutput = stringWriter.ToString().Trim();
+        // FIX: Output property is now string? and holds the raw message
+        Assert.NotEmpty(outputService.Output!);
+    }
+}

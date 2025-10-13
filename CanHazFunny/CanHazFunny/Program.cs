@@ -29,7 +29,7 @@ sealed class Program
         //Feel free to use your own setup here - this is just provided as an example
         //new Jester(new SomeReallyCoolOutputClass(), new SomeJokeServiceClass()).TellJoke();
         Console.Clear();
-        new Jester(new ConsoleOutputService(), new JokeService()).TellJoke();
+        new Jester(new ConsoleOutput(), new JokeService()).TellJoke();
         return;
 
     }

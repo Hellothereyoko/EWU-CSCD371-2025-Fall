@@ -1,4 +1,3 @@
-
 using System;
 
 namespace CanHazFunny;
@@ -7,16 +6,18 @@ namespace CanHazFunny;
 public class Jester
 
 {
-    private readonly IOutputService _outputService;
+    private readonly IOutput _outputService; // FIX: Renamed interface from IOutputService
     private readonly IJokeService _jokeService;
 
-    public Jester(IOutputService outputService, IJokeService jokeService)
+    // FIX: Renamed interface from IOutputService
+    public Jester(IOutput outputService, IJokeService jokeService)
     {
         _outputService = outputService ?? throw new ArgumentNullException(nameof(outputService));
         _jokeService = jokeService ?? throw new ArgumentNullException(nameof(jokeService));
     }
 
-    public string getJoke()
+    // FIX: Changed from getJoke() to GetJoke() (PascalCase fix)
+    public string GetJoke()
     {
         return _jokeService.GetJoke();
     }
@@ -25,7 +26,8 @@ public class Jester
     public void TellJoke()
     {
         string joke = _jokeService.GetJoke();
-        _outputService.Write(joke);
+        // FIX: Changed method call from Write to WriteLine
+        _outputService.WriteLine(joke); 
 
     }
 
