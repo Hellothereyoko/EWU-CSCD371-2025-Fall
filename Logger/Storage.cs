@@ -1,4 +1,8 @@
-﻿namespace Logger;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Logger;
 public class Storage
 {
     private HashSet<IEntity> Entities { get; } = new();

@@ -1,4 +1,7 @@
-﻿namespace Logger;
+﻿using System;
+using System.IO;
+
+namespace Logger;
 
 public class FileLogger : BaseLogger, ILogger
 {
