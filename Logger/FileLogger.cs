@@ -16,6 +16,7 @@ public class FileLogger : BaseLogger, ILogger
     public static ILogger CreateLogger<TConfig, TLogger>(TConfig configuration)
         where TConfig : ILoggerConfiguration
         where TLogger : ILogger
+
     {
         if (configuration is FileLoggerConfiguration fileConfig)
             return new FileLogger(fileConfig);
