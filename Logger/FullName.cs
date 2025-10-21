@@ -1,4 +1,4 @@
-﻿namespace Logger
+﻿namespace Logger;
 {
     //FullName represents a person's full name with first, last, and optional middle name
     //It is defined as a record because it is data container
