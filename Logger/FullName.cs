@@ -1,5 +1,5 @@
 ﻿namespace Logger;
-{
+
     //FullName represents a person's full name with first, last, and optional middle name
     //It is defined as a record because it is data container
     //We want equality based on its values rather than the object's references
