@@ -1,5 +1,5 @@
-namespace Logger
-{
+namespace Logger;
+
     public record FullName
     {
         public string First { get; init; }
@@ -13,5 +13,5 @@ namespace Logger
             Middle = middle;
         }
     }
-}
+
 
