@@ -1,3 +1,5 @@
+using System;
+
 namespace Logger;
 //FullName represents a person's full name with first, last, and optional middle name
 //It is defined as a record because it is data container
@@ -14,10 +16,16 @@ public record FullName
 
         public FullName(string first, string last, string? middle = null)
         {
-            First = first;
-            Last = last;
-            Middle = middle;
-        }
+            if (string.IsNullOrWhiteSpace(first))
+                throw new ArgumentException("First name cannot be null or whitespace.", nameof(first));
+
+            if (string.IsNullOrWhiteSpace(last))
+                throw new ArgumentException("Last name cannot be null or whitespace.", nameof(last));
+
+            First = first.Trim();
+            Last = last.Trim();
+            Middle = string.IsNullOrWhiteSpace(middle) ? null : middle.Trim();
+    }
     }
 
 
