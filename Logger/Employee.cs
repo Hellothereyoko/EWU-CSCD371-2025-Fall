@@ -11,6 +11,8 @@ public record Employee : PersonEntity
     
       public Employee(Guid id, FullName fullName, string email, string role) : base(id, fullName, email)
     {
-        Role = role ?? throw new ArgumentNullException(nameof(role));
+        if(string.IsNullOrWhiteSpace(role))
+            throw new ArgumentNullException("Role cannot be null or whitespace", nameof(role));
+        Role = role;
     }
 }
