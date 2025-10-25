@@ -1,4 +1,4 @@
 <Solution>
   <Project Path="GenericsHomework/GenericsHomework.csproj" />
-  <Project Path="GenericsHomeworkTests/GenericsHomeworkTests.csproj" />
+  <Project Path="GenericsHomeworkTests/GenericsHomework.Tests.csproj" />
 </Solution>
