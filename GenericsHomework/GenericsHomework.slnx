@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="GenericsHomework/GenericsHomework.csproj" />
+  <Project Path="GenericsHomeworkTests/GenericsHomeworkTests.csproj" />
+</Solution>
