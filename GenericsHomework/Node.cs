@@ -5,11 +5,11 @@ namespace GenericsHomework;
 
 public class Node<T>
 {
-    public T Value { get; set; }
+    public T Value { get; set; } //Get-Set T-Value
 
-    public Node<T> Next { get; private set; }
+    public Node<T> Next { get; private set; } //Make next a private init obj
 
-    public Node(T value)
+    public Node(T value) //Instantiate values for best access practice 
     {
         Value = value;
         Next = this;
@@ -17,7 +17,7 @@ public class Node<T>
 
     public override string ToString()
     {
-        return Value?.ToString() ?? String.Empty;
+        return Value?.ToString() ?? String.Empty; //checks if val present: if not, it returns an empty string to be handled
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ public class Node<T>
         // Check for duplicates before appending
         if (Exists(value))
         {
-            throw new ArgumentException($"Value '{value}' already exists in the list.", nameof(value));
+            throw new ArgumentException($"Value '{value}' already exists in the list.", nameof(value)); //ERR CONDITION
         }
 
         Node<T> newNode = new Node<T>(value);
@@ -52,13 +52,13 @@ public class Node<T>
     public bool Exists(T value)
     {
         Node<T> current = this;
-        
+
         // Check first node
         if (EqualityComparer<T>.Default.Equals(current.Value, value))
         {
             return true;
         }
-        
+
         // Traverse the rest of the circular list
         current = current.Next;
         while (current != this)
@@ -69,15 +69,13 @@ public class Node<T>
             }
             current = current.Next;
         }
-        
+
         return false;
     }
 
-    /// <summary>
-    /// Removes all nodes from the list except the current node.
-    /// Sets Next to point to itself, effectively isolating this node.
-    /// 
+
     /// Garbage Collection Note:
+    /// -----------------------------------------------------------------------
     /// We only need to set Next to itself because in C#, the garbage collector
     /// can detect and collect circular references. Even though removed nodes
     /// form a circular chain pointing to each other, they will be collected
@@ -86,14 +84,19 @@ public class Node<T>
     /// so unreachable circular structures are properly collected.
     /// Therefore, we don't need to manually break the removed nodes' circular
     /// references - the GC will handle them automatically.
-    /// </summary>
+    
+
+
+
+    /// Rm all nodes from the list except the current node.
+    /// Sets Next to point to itself, effectively isolating this node.
     public void Clear()
     {
         // Simply set Next to this, breaking connection to other nodes
         // The removed nodes will form their own circular chain with no external references
         Next = this;
         
-        // No need to traverse and break the removed nodes' chain
+        // No need to traverse & break chain
         // The GC will collect them as they're now unreachable
     }
 }
