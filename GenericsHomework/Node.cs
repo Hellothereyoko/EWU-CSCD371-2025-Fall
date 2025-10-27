@@ -1,4 +1,7 @@
-﻿namespace GenericsHomework;
+﻿using System;
+using System.Collections.Generic;
+
+namespace GenericsHomework;
 
 public class Node<T>
 {
