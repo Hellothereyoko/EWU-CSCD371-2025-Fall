@@ -550,7 +550,7 @@ public class NodeTests
     }
 
     // Helper classes for testing custom types
-    private class Person
+    private sealed class Person
     {
         public string Name { get; set; } = string.Empty;
         public int Age { get; set; }
