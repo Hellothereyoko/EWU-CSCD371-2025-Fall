@@ -12,7 +12,7 @@ public class NodeTests
     public void Constructor_ProperValue_Initializes()
     {
         // Arrange & Act
-        Node<int> testNode = new Node<int>(10);
+        NodeCollection<int> testNode = new NodeCollection<int>(10);
 
         // Assert
         Assert.NotNull(testNode);
@@ -25,7 +25,7 @@ public class NodeTests
     public void Constructor_StringValue_Initializes()
     {
         // Arrange & Act
-        Node<string> testNode = new Node<string>("test");
+        NodeCollection<string> testNode = new NodeCollection<string>("test");
 
         // Assert
         Assert.NotNull(testNode);
@@ -38,7 +38,7 @@ public class NodeTests
     public void Constructor_DoubleValue_Initializes()
     {
         // Arrange & Act
-        Node<double> testNode = new Node<double>(3.14);
+        NodeCollection<double> testNode = new NodeCollection<double>(3.14);
 
         // Assert
         Assert.NotNull(testNode);
@@ -51,7 +51,7 @@ public class NodeTests
     public void ToString_ReturnsValueString_Success()
     {
         // Arrange
-        Node<string> testNode = new Node<string>("TestValue");
+        NodeCollection<string> testNode = new NodeCollection<string>("TestValue");
 
         // Act
         string result = testNode.ToString();
@@ -65,7 +65,7 @@ public class NodeTests
     public void ToString_IntValue_ReturnsString()
     {
         // Arrange
-        Node<int> testNode = new Node<int>(42);
+        NodeCollection<int> testNode = new NodeCollection<int>(42);
 
         // Act
         string result = testNode.ToString();
@@ -79,7 +79,7 @@ public class NodeTests
     public void ToString_NullValue_ReturnsEmptyString()
     {
         // Arrange
-        Node<string> testNode = new Node<string>("test");
+        NodeCollection<string> testNode = new NodeCollection<string>("test");
         testNode.Value = null!;
 
         // Act
@@ -98,7 +98,7 @@ public class NodeTests
         // The fact that this maintains circular structure proves the setter works correctly
 
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
 
         // Act
         firstNode.Append(2);
@@ -112,7 +112,7 @@ public class NodeTests
     public void Append_SingleNode_CreatesCircularList()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
 
         // Act
         firstNode.Append(2);
@@ -126,7 +126,7 @@ public class NodeTests
     public void Append_TwoNodes_MaintainsCircularStructure()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
 
         // Act
         firstNode.Append(2);
@@ -143,7 +143,7 @@ public class NodeTests
     public void Append_MultipleNodes_MaintainsCircularStructure()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
 
         // Act
         firstNode.Append(2);
@@ -164,7 +164,7 @@ public class NodeTests
     public void Append_StringNodes_Works()
     {
         // Arrange
-        Node<string> firstNode = new Node<string>("apple");
+        NodeCollection<string> firstNode = new NodeCollection<string>("apple");
 
         // Act
         firstNode.Append("banana");
@@ -181,7 +181,7 @@ public class NodeTests
     public void Append_DuplicateValue_ThrowsArgumentException()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
 
@@ -195,7 +195,7 @@ public class NodeTests
     public void Append_DuplicateOfFirstNode_ThrowsArgumentException()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
 
@@ -208,7 +208,7 @@ public class NodeTests
     public void Append_DuplicateString_ThrowsArgumentException()
     {
         // Arrange
-        Node<string> firstNode = new Node<string>("test");
+        NodeCollection<string> firstNode = new NodeCollection<string>("test");
         firstNode.Append("hello");
 
         // Act & Assert
@@ -219,7 +219,7 @@ public class NodeTests
     public void Append_DuplicateInLargeList_ThrowsArgumentException()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         for (int i = 2; i <= 10; i++)
         {
             firstNode.Append(i);
@@ -233,7 +233,7 @@ public class NodeTests
     public void Exists_ValueInFirstNode_ReturnsTrue()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
 
@@ -248,7 +248,7 @@ public class NodeTests
     public void Exists_ValueInMiddleNode_ReturnsTrue()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         firstNode.Append(4);
@@ -264,7 +264,7 @@ public class NodeTests
     public void Exists_ValueInLastNode_ReturnsTrue()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
 
@@ -279,7 +279,7 @@ public class NodeTests
     public void Exists_AllValuesInList_ReturnsTrue()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
 
@@ -293,7 +293,7 @@ public class NodeTests
     public void Exists_ValueNotInList_ReturnsFalse()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
 
@@ -307,7 +307,7 @@ public class NodeTests
     public void Exists_SingleNode_ExistingValue_ReturnsTrue()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(42);
+        NodeCollection<int> firstNode = new NodeCollection<int>(42);
 
         // Act & Assert
         Assert.True(firstNode.Exists(42));
@@ -317,7 +317,7 @@ public class NodeTests
     public void Exists_SingleNode_NonExistingValue_ReturnsFalse()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(42);
+        NodeCollection<int> firstNode = new NodeCollection<int>(42);
 
         // Act & Assert
         Assert.False(firstNode.Exists(1));
@@ -327,7 +327,7 @@ public class NodeTests
     public void Exists_StringValues_Works()
     {
         // Arrange
-        Node<string> firstNode = new Node<string>("apple");
+        NodeCollection<string> firstNode = new NodeCollection<string>("apple");
         firstNode.Append("banana");
         firstNode.Append("cherry");
 
@@ -342,7 +342,7 @@ public class NodeTests
     public void Exists_NullValue_Works()
     {
         // Arrange
-        Node<string?> firstNode = new Node<string?>(null);
+        NodeCollection<string?> firstNode = new NodeCollection<string?>(null);
         firstNode.Append("test");
 
         // Act & Assert
@@ -354,7 +354,7 @@ public class NodeTests
     public void Clear_MultipleNodes_RemovesAllButCurrent()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         firstNode.Append(4);
@@ -374,7 +374,7 @@ public class NodeTests
     public void Clear_SingleNode_RemainsUnchanged()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
 
         // Act
         firstNode.Clear();
@@ -388,7 +388,7 @@ public class NodeTests
     public void Clear_TwoNodes_RemovesSecond()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
 
         // Act
@@ -404,7 +404,7 @@ public class NodeTests
     public void Clear_CanAppendAfterClearing()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
 
@@ -423,7 +423,7 @@ public class NodeTests
     public void Clear_CanAppendPreviousValues()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
 
         // Act
@@ -450,13 +450,13 @@ public class NodeTests
         // GC roots, so it can detect and collect unreachable circular structures.
 
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         firstNode.Append(4);
 
         // Capture references to verify the structure before clear
-        Node<int> secondNode = firstNode.Next;
+        NodeCollection<int> secondNode = firstNode.Next;
 
         // Act
         firstNode.Clear();
@@ -484,7 +484,7 @@ public class NodeTests
         // Arrange
         var person1 = new Person { Name = "Alice", Age = 30 };
         var person2 = new Person { Name = "Bob", Age = 25 };
-        Node<Person> firstNode = new Node<Person>(person1);
+        NodeCollection<Person> firstNode = new NodeCollection<Person>(person1);
 
         // Act
         firstNode.Append(person2);
@@ -501,7 +501,7 @@ public class NodeTests
         // Arrange
         var point1 = new Point { X = 1, Y = 2 };
         var point2 = new Point { X = 3, Y = 4 };
-        Node<Point> firstNode = new Node<Point>(point1);
+        NodeCollection<Point> firstNode = new NodeCollection<Point>(point1);
 
         // Act
         firstNode.Append(point2);
@@ -516,7 +516,7 @@ public class NodeTests
     public void LargeList_MaintainsCircularIntegrity()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(0);
+        NodeCollection<int> firstNode = new NodeCollection<int>(0);
 
         // Act - Create a list with 100 nodes
         for (int i = 1; i < 100; i++)
@@ -525,7 +525,7 @@ public class NodeTests
         }
 
         // Assert - Traverse all 100 nodes and verify we circle back
-        Node<int> current = firstNode;
+        NodeCollection<int> current = firstNode;
         for (int i = 0; i < 100; i++)
         {
             Assert.Equal(i, current.Value);
@@ -540,7 +540,7 @@ public class NodeTests
     {
         // Arrange
         var person = new Person { Name = "Alice", Age = 30 };
-        Node<Person> node = new Node<Person>(person);
+        NodeCollection<Person> node = new NodeCollection<Person>(person);
 
         // Act
         string result = node.ToString();
@@ -553,7 +553,7 @@ public class NodeTests
     public void Count_MultipleNodes_ReturnsCorrectCount()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         firstNode.Append(4);
@@ -568,7 +568,7 @@ public class NodeTests
     public void Count_SingleNode_ReturnsOne()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         // Act
         int count = firstNode.Count;
         // Assert
@@ -579,7 +579,7 @@ public class NodeTests
     public void Add_ProperNode_AppendsNode()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         // Act
         firstNode.Add(2);
         firstNode.Add(3);
@@ -593,7 +593,7 @@ public class NodeTests
     public void Contains_ExistingValue_ReturnsTrue()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         // Act
@@ -606,7 +606,7 @@ public class NodeTests
     public void Remove_ExistingValue_RemovesNode()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         // Act
@@ -621,7 +621,7 @@ public class NodeTests
     public void Remove_NonExistingValue_ReturnsFalse()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         // Act
@@ -634,7 +634,7 @@ public class NodeTests
     public void Remove_FirstNode_UpdatesHead()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         // Act
@@ -649,7 +649,7 @@ public class NodeTests
     public void CopyTo_Array_CopiesElements()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         int[] array = new int[5];
@@ -667,7 +667,7 @@ public class NodeTests
     public void CopyTo_Array_IndexOutOfRange_ThrowsException()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         int[] array = new int[2];
         // Act & Assert
@@ -678,7 +678,7 @@ public class NodeTests
     public void GetEnumerator_IteratesThroughNodes()
     {
         // Arrange
-        Node<int> firstNode = new Node<int>(1);
+        NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
         var enumerator = firstNode.GetEnumerator();

@@ -4,17 +4,17 @@ using System.Collections.Generic;
 
 namespace GenericsHomework;
 
-public class Node<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>, IEnumerable
+public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>, IEnumerable
 {
     public T Value { get; set; } //Get-Set T-Value
 
-    public Node<T> Next { get; private set; } //Make next a private init obj
+    public NodeCollection<T> Next { get; private set; } //Make next a private init obj
     public int Count
     {
         get
         {
             int count = 1; // Start with 1 for the current node
-            Node<T> current = this.Next;
+            NodeCollection<T> current = this.Next;
             // Traverse the circular list until we loop back to the starting node
             while (current != this)
             {
@@ -27,7 +27,7 @@ public class Node<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>
 
     public bool IsReadOnly => false; //Collection is mutable
 
-    public Node(T value) //Instantiate values for best access practice 
+    public NodeCollection(T value) //Instantiate values for best access practice 
     {
         Value = value;
         Next = this;
@@ -50,10 +50,10 @@ public class Node<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>
             throw new ArgumentException($"Value '{value}' already exists in the list.", nameof(value)); //ERR CONDITION
         }
 
-        Node<T> newNode = new Node<T>(value);
+        NodeCollection<T> newNode = new NodeCollection<T>(value);
 
         // Find the last node in the circular list (the one that points back to this)
-        Node<T> current = this;
+        NodeCollection<T> current = this;
         while (current.Next != this)
         {
             current = current.Next;
@@ -74,7 +74,7 @@ public class Node<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>
     /// </summary>
     public bool Exists(T value)
     {
-        Node<T> current = this;
+        NodeCollection<T> current = this;
 
         // Check first node
         if (EqualityComparer<T>.Default.Equals(current.Value, value))
@@ -120,7 +120,7 @@ public class Node<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>
         }
 
         // Case 2: Look for the item in the rest of the list
-        Node<T> current = this;
+        NodeCollection<T> current = this;
         while (current.Next != this)
         {
             if (EqualityComparer<T>.Default.Equals(current.Next.Value, item))
@@ -138,15 +138,15 @@ public class Node<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>
 
     public void CopyTo(T[] array, int arrayIndex)
     {
-        if (array == null)
-        {
-            throw new ArgumentNullException(nameof(array));
-        }
+
+
+        ArgumentNullException.ThrowIfNull(array);
+
         if (arrayIndex < 0 || arrayIndex >= array.Length)
         {
             throw new ArgumentOutOfRangeException(nameof(arrayIndex));
         }
-        Node<T> current = this;
+        NodeCollection<T> current = this;
         int index = arrayIndex;
         do
         {
@@ -162,7 +162,7 @@ public class Node<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>
 
     public IEnumerator<T> GetEnumerator()
     {
-        Node<T> current = this;
+        NodeCollection<T> current = this;
         do
         {
             yield return current.Value;
