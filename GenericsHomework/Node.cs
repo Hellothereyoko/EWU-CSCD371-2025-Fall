@@ -1,13 +1,31 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace GenericsHomework;
 
-public class Node<T>
+public class Node<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>, IEnumerable
 {
     public T Value { get; set; } //Get-Set T-Value
 
     public Node<T> Next { get; private set; } //Make next a private init obj
+    public int Count
+    {
+        get
+        {
+            int count = 1; // Start with 1 for the current node
+            Node<T> current = this.Next;
+            // Traverse the circular list until we loop back to the starting node
+            while (current != this)
+            {
+                count++;
+                current = current.Next;
+            }
+            return count;
+        }
+    }
+
+    public bool IsReadOnly => false; //Collection is mutable
 
     public Node(T value) //Instantiate values for best access practice 
     {
@@ -33,17 +51,22 @@ public class Node<T>
         }
 
         Node<T> newNode = new Node<T>(value);
-        
+
         // Find the last node in the circular list (the one that points back to this)
         Node<T> current = this;
         while (current.Next != this)
         {
             current = current.Next;
         }
-        
+
         // Insert new node between last node and this (first) node
         current.Next = newNode;
         newNode.Next = this;
+    }
+
+    public void Add(T item)
+    {
+        Append(item);
     }
 
     /// <summary>
@@ -73,6 +96,84 @@ public class Node<T>
         return false;
     }
 
+    public bool Contains(T item)
+    {
+        return Exists(item);
+    }
+
+    public bool Remove(T item)
+    {
+        // Case 1: If the item to remove is in the first node (this)
+        if (EqualityComparer<T>.Default.Equals(Value, item))
+        {
+            if (Next == this)
+            {
+                // Special case: only one node in the list
+                // Cannot remove the only node as it would break the circular structure
+                return false;
+            }
+
+            // Copy the next node's value to this node and remove the next node instead
+            Value = Next.Value;
+            Next = Next.Next;
+            return true;
+        }
+
+        // Case 2: Look for the item in the rest of the list
+        Node<T> current = this;
+        while (current.Next != this)
+        {
+            if (EqualityComparer<T>.Default.Equals(current.Next.Value, item))
+            {
+                // Remove the found node by updating the Next reference
+                current.Next = current.Next.Next;
+                return true;
+            }
+            current = current.Next;
+        }
+
+        // Item not found
+        return false;
+    }
+
+    public void CopyTo(T[] array, int arrayIndex)
+    {
+        if (array == null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+        if (arrayIndex < 0 || arrayIndex >= array.Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+        }
+        Node<T> current = this;
+        int index = arrayIndex;
+        do
+        {
+            if (index >= array.Length)
+            {
+                throw new ArgumentException("The array is not large enough to hold the elements.", nameof(array));
+            }
+            array[index] = current.Value;
+            index++;
+            current = current.Next;
+        } while (current != this);
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        Node<T> current = this;
+        do
+        {
+            yield return current.Value;
+            current = current.Next;
+        } while (current != this);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 
     /// Garbage Collection Note:
     /// -----------------------------------------------------------------------
@@ -84,7 +185,7 @@ public class Node<T>
     /// so unreachable circular structures are properly collected.
     /// Therefore, we don't need to manually break the removed nodes' circular
     /// references - the GC will handle them automatically.
-    
+
 
 
 
@@ -95,8 +196,9 @@ public class Node<T>
         // Simply set Next to this, breaking connection to other nodes
         // The removed nodes will form their own circular chain with no external references
         Next = this;
-        
+
         // No need to traverse & break chain
         // The GC will collect them as they're now unreachable
     }
+
 }

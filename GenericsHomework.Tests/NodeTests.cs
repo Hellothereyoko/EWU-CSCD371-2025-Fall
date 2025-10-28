@@ -549,6 +549,149 @@ public class NodeTests
         Assert.Equal("Alice (30)", result);
     }
 
+    [Fact]
+    public void Count_MultipleNodes_ReturnsCorrectCount()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        firstNode.Append(2);
+        firstNode.Append(3);
+        firstNode.Append(4);
+        firstNode.Append(5);
+        // Act
+        int count = firstNode.Count;
+        // Assert
+        Assert.Equal(5, count);
+    }
+
+    [Fact]
+    public void Count_SingleNode_ReturnsOne()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        // Act
+        int count = firstNode.Count;
+        // Assert
+        Assert.Equal(1, count);
+    }
+
+    [Fact]
+    public void Add_ProperNode_AppendsNode()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        // Act
+        firstNode.Add(2);
+        firstNode.Add(3);
+        // Assert
+        Assert.Equal(2, firstNode.Next.Value);
+        Assert.Equal(3, firstNode.Next.Next.Value);
+        Assert.Same(firstNode, firstNode.Next.Next.Next);
+    }
+
+    [Fact]
+    public void Contains_ExistingValue_ReturnsTrue()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        firstNode.Append(2);
+        firstNode.Append(3);
+        // Act
+        bool contains = firstNode.Contains(2);
+        // Assert
+        Assert.True(contains);
+    }
+
+    [Fact]
+    public void Remove_ExistingValue_RemovesNode()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        firstNode.Append(2);
+        firstNode.Append(3);
+        // Act
+        bool removed = firstNode.Remove(2);
+        // Assert
+        Assert.True(removed);
+        Assert.False(firstNode.Exists(2));
+        Assert.Equal(3, firstNode.Next.Value);
+    }
+
+    [Fact]
+    public void Remove_NonExistingValue_ReturnsFalse()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        firstNode.Append(2);
+        firstNode.Append(3);
+        // Act
+        bool removed = firstNode.Remove(4);
+        // Assert
+        Assert.False(removed);
+    }
+
+    [Fact]
+    public void Remove_FirstNode_UpdatesHead()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        firstNode.Append(2);
+        firstNode.Append(3);
+        // Act
+        bool removed = firstNode.Remove(1);
+        // Assert
+        Assert.True(removed);
+        Assert.Equal(2, firstNode.Value); // Head should now be 2
+        Assert.Equal(3, firstNode.Next.Value);
+    }
+
+    [Fact]
+    public void CopyTo_Array_CopiesElements()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        firstNode.Append(2);
+        firstNode.Append(3);
+        int[] array = new int[5];
+        // Act
+        firstNode.CopyTo(array, 1);
+        // Assert
+        Assert.Equal(0, array[0]); // Default int value
+        Assert.Equal(1, array[1]);
+        Assert.Equal(2, array[2]);
+        Assert.Equal(3, array[3]);
+        Assert.Equal(0, array[4]); // Default int value
+    }
+
+    [Fact]
+    public void CopyTo_Array_IndexOutOfRange_ThrowsException()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        firstNode.Append(2);
+        int[] array = new int[2];
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => firstNode.CopyTo(array, 2));
+    }
+
+    [Fact]
+    public void GetEnumerator_IteratesThroughNodes()
+    {
+        // Arrange
+        Node<int> firstNode = new Node<int>(1);
+        firstNode.Append(2);
+        firstNode.Append(3);
+        var enumerator = firstNode.GetEnumerator();
+        int sum = 0;
+        // Act
+        while (enumerator.MoveNext())
+        {
+            sum += enumerator.Current;
+        }
+        // Assert
+        Assert.Equal(6, sum); // 1 + 2 + 3 = 6
+    }
+
     // Helper classes for testing custom types
     private class Person
     {
