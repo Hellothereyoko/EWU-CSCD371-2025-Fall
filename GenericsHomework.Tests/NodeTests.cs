@@ -557,7 +557,7 @@ public class NodeTests
         firstNode.Clear();
         
         // Assert
-        Assert.Single(firstNode);
+        Assert.Equal(1, firstNode.Count);
     }
 
     // ==================== ICOLLECTION<T> IMPLEMENTATION TESTS ====================
@@ -690,7 +690,7 @@ public class NodeTests
         
         // Assert
         Assert.True(removed);
-        Assert.Single(firstNode);
+        Assert.Equal(1, firstNode.Count);
         Assert.Same(firstNode, firstNode.Next);
     }
 
@@ -729,11 +729,11 @@ public class NodeTests
         
         // Assert
         Assert.Equal(3, firstNode.Count);
-        Assert.Contains(1, firstNode);
-        Assert.DoesNotContain(2, firstNode);
-        Assert.Contains(3, firstNode);
-        Assert.DoesNotContain(4, firstNode);
-        Assert.Contains(5, firstNode);
+        Assert.True(firstNode.Contains(1));
+        Assert.False(firstNode.Contains(2));
+        Assert.True(firstNode.Contains(3));
+        Assert.False(firstNode.Contains(4));
+        Assert.True(firstNode.Contains(5));
     }
 
     [Fact]
@@ -857,7 +857,8 @@ public class NodeTests
         }
         
         // Assert
-        Assert.Equal(new[] { 1, 2, 3 }, values);
+        int[] expected = new[] { 1, 2, 3 };
+        Assert.Equal(expected, values);
     }
 
     [Fact]
@@ -955,7 +956,8 @@ public class NodeTests
         Assert.Equal(50, count);
     }
 
-    // Helper classes for testing custom types
+    // ==================== HELPER CLASSES ====================
+    
     private sealed class Person
     {
         public string Name { get; set; } = string.Empty;
