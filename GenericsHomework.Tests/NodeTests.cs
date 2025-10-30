@@ -955,8 +955,7 @@ public class NodeTests
         Assert.Equal(50, count);
     }
 
-    // ==================== HELPER CLASSES ====================
-    
+    // Helper classes for testing custom types
     private sealed class Person
     {
         public string Name { get; set; } = string.Empty;
