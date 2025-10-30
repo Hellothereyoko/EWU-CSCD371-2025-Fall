@@ -4,11 +4,27 @@ using System.Collections.Generic;
 
 namespace GenericsHomework;
 
+/// <summary>
+/// A circular linked list implementation that maintains a homogeneous collection of values.
+/// Each node points to the next node, with the last node pointing back to the first.
+/// </summary>
+/// <typeparam name="T">The type of values stored in the collection.</typeparam>
 public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnumerable<T>, IEnumerable
 {
-    public T Value { get; set; } //Get-Set T-Value
+    /// <summary>
+    /// Gets or sets the value stored in this node.
+    /// </summary>
+    public T Value { get; set; }
 
-    public NodeCollection<T> Next { get; private set; } //Make next a private init obj
+    /// <summary>
+    /// Gets the next node in the circular list.
+    /// The setter is private to maintain circular structure integrity.
+    /// </summary>
+    public NodeCollection<T> Next { get; private set; }
+
+    /// <summary>
+    /// Gets the number of elements in the circular list.
+    /// </summary>
     public int Count
     {
         get
@@ -25,29 +41,43 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
         }
     }
 
-    public bool IsReadOnly => false; //Collection is mutable
+    /// <summary>
+    /// Gets a value indicating whether the collection is read-only.
+    /// Always returns false as this collection is mutable.
+    /// </summary>
+    public bool IsReadOnly => false;
 
-    public NodeCollection(T value) //Instantiate values for best access practice 
+    /// <summary>
+    /// Initializes a new node with the specified value.
+    /// The node initially points to itself, forming a circular structure.
+    /// </summary>
+    /// <param name="value">The value to store in this node.</param>
+    public NodeCollection(T value)
     {
         Value = value;
         Next = this;
     }
 
+    /// <summary>
+    /// Returns the string representation of the value stored in this node.
+    /// </summary>
+    /// <returns>The string representation of the value, or an empty string if the value is null.</returns>
     public override string ToString()
     {
-        return Value?.ToString() ?? String.Empty; //checks if val present: if not, it returns an empty string to be handled
+        return Value?.ToString() ?? String.Empty;
     }
 
     /// <summary>
     /// Appends a new node with the specified value to the circular list.
-    /// Throws ArgumentException if the value already exists in the list.
     /// </summary>
+    /// <param name="value">The value to append.</param>
+    /// <exception cref="ArgumentException">Thrown when the value already exists in the list.</exception>
     public void Append(T value)
     {
         // Check for duplicates before appending
         if (Exists(value))
         {
-            throw new ArgumentException($"Value '{value}' already exists in the list.", nameof(value)); //ERR CONDITION
+            throw new ArgumentException($"Value '{value}' already exists in the list.", nameof(value));
         }
 
         NodeCollection<T> newNode = new NodeCollection<T>(value);
@@ -64,6 +94,11 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
         newNode.Next = this;
     }
 
+    /// <summary>
+    /// Adds an item to the collection. This is an alias for Append.
+    /// </summary>
+    /// <param name="item">The item to add.</param>
+    /// <exception cref="ArgumentException">Thrown when the item already exists in the list.</exception>
     public void Add(T item)
     {
         Append(item);
@@ -72,6 +107,8 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
     /// <summary>
     /// Checks if a value exists anywhere in the circular list.
     /// </summary>
+    /// <param name="value">The value to search for.</param>
+    /// <returns>True if the value exists; otherwise, false.</returns>
     public bool Exists(T value)
     {
         NodeCollection<T> current = this;
@@ -96,11 +133,25 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the collection contains a specific value.
+    /// </summary>
+    /// <param name="item">The value to locate.</param>
+    /// <returns>True if the value is found; otherwise, false.</returns>
     public bool Contains(T item)
     {
         return Exists(item);
     }
 
+    /// <summary>
+    /// Removes the first occurrence of a specific value from the collection.
+    /// </summary>
+    /// <param name="item">The value to remove.</param>
+    /// <returns>True if the item was successfully removed; false if the item was not found or cannot be removed.</returns>
+    /// <remarks>
+    /// Cannot remove the only node in the list as it would break the circular structure.
+    /// In this case, the method returns false.
+    /// </remarks>
     public bool Remove(T item)
     {
         // Case 1: If the item to remove is in the first node (this)
@@ -110,6 +161,7 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
             {
                 // Special case: only one node in the list
                 // Cannot remove the only node as it would break the circular structure
+                // Returning false to indicate the item cannot be removed
                 return false;
             }
 
@@ -136,30 +188,43 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
         return false;
     }
 
+    /// <summary>
+    /// Copies the elements of the collection to an array, starting at a particular array index.
+    /// </summary>
+    /// <param name="array">The destination array.</param>
+    /// <param name="arrayIndex">The zero-based index in the array at which copying begins.</param>
+    /// <exception cref="ArgumentNullException">Thrown when array is null.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when arrayIndex is less than 0.</exception>
+    /// <exception cref="ArgumentException">Thrown when the destination array is not large enough.</exception>
     public void CopyTo(T[] array, int arrayIndex)
     {
-
-
         ArgumentNullException.ThrowIfNull(array);
 
-        if (arrayIndex < 0 || arrayIndex >= array.Length)
+        if (arrayIndex < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+            throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Array index cannot be negative.");
         }
+
+        // Check if there's enough space in the array
+        if (array.Length - arrayIndex < Count)
+        {
+            throw new ArgumentException("The destination array is not large enough to hold the elements.", nameof(array));
+        }
+
         NodeCollection<T> current = this;
         int index = arrayIndex;
         do
         {
-            if (index >= array.Length)
-            {
-                throw new ArgumentException("The array is not large enough to hold the elements.", nameof(array));
-            }
             array[index] = current.Value;
             index++;
             current = current.Next;
         } while (current != this);
     }
 
+    /// <summary>
+    /// Returns an enumerator that iterates through the collection.
+    /// </summary>
+    /// <returns>An enumerator for the collection.</returns>
     public IEnumerator<T> GetEnumerator()
     {
         NodeCollection<T> current = this;
@@ -170,11 +235,20 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
         } while (current != this);
     }
 
+    /// <summary>
+    /// Returns an enumerator that iterates through the collection.
+    /// </summary>
+    /// <returns>An enumerator for the collection.</returns>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
     }
 
+    /// <summary>
+    /// Removes all nodes from the list except the current node.
+    /// Sets Next to point to itself, effectively isolating this node.
+    /// </summary>
+    /// <remarks>
     /// Garbage Collection Note:
     /// -----------------------------------------------------------------------
     /// We only need to set Next to itself because in C#, the garbage collector
@@ -185,12 +259,7 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
     /// so unreachable circular structures are properly collected.
     /// Therefore, we don't need to manually break the removed nodes' circular
     /// references - the GC will handle them automatically.
-
-
-
-
-    /// Rm all nodes from the list except the current node.
-    /// Sets Next to point to itself, effectively isolating this node.
+    /// </remarks>
     public void Clear()
     {
         // Simply set Next to this, breaking connection to other nodes
@@ -200,5 +269,4 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
         // No need to traverse & break chain
         // The GC will collect them as they're now unreachable
     }
-
 }
