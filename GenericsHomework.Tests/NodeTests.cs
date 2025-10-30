@@ -557,7 +557,7 @@ public class NodeTests
         firstNode.Clear();
         
         // Assert
-        Assert.Equal(1, firstNode.Count);
+        Assert.Single(firstNode);
     }
 
     // ==================== ICOLLECTION<T> IMPLEMENTATION TESTS ====================
@@ -690,7 +690,7 @@ public class NodeTests
         
         // Assert
         Assert.True(removed);
-        Assert.Equal(1, firstNode.Count);
+        Assert.Single(firstNode);
         Assert.Same(firstNode, firstNode.Next);
     }
 
@@ -729,11 +729,11 @@ public class NodeTests
         
         // Assert
         Assert.Equal(3, firstNode.Count);
-        Assert.True(firstNode.Contains(1));
-        Assert.False(firstNode.Contains(2));
-        Assert.True(firstNode.Contains(3));
-        Assert.False(firstNode.Contains(4));
-        Assert.True(firstNode.Contains(5));
+        Assert.Contains(1, firstNode);
+        Assert.DoesNotContain(2, firstNode);
+        Assert.Contains(3, firstNode);
+        Assert.DoesNotContain(4, firstNode);
+        Assert.Contains(5, firstNode);
     }
 
     [Fact]
