@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 
 namespace GenericsHomework;
 
@@ -71,13 +69,13 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
     /// Appends a new node with the specified value to the circular list.
     /// </summary>
     /// <param name="value">The value to append.</param>
-    /// <exception cref="ArgumentException">Thrown when the value already exists in the list.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the value already exists in the list.</exception>
     public void Append(T value)
     {
         // Check for duplicates before appending
         if (Exists(value))
         {
-            throw new ArgumentException($"Value '{value}' already exists in the list.", nameof(value));
+            throw new InvalidOperationException($"Value '{value}' already exists in the list.");
         }
 
         NodeCollection<T> newNode = new NodeCollection<T>(value);
@@ -113,22 +111,14 @@ public class NodeCollection<T> : System.Collections.Generic.ICollection<T>, IEnu
     {
         NodeCollection<T> current = this;
 
-        // Check first node
-        if (EqualityComparer<T>.Default.Equals(current.Value, value))
-        {
-            return true;
-        }
-
-        // Traverse the rest of the circular list
-        current = current.Next;
-        while (current != this)
+        do
         {
             if (EqualityComparer<T>.Default.Equals(current.Value, value))
             {
                 return true;
             }
             current = current.Next;
-        }
+        } while (current != this);
 
         return false;
     }

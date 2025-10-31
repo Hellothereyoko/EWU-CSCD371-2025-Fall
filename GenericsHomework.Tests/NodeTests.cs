@@ -191,7 +191,7 @@ public class NodeTests
     }
 
     [TestMethod]
-    public void Append_DuplicateValue_ThrowsArgumentException()
+    public void Append_DuplicateValue_ThrowsInvalidOperationException()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
@@ -199,13 +199,13 @@ public class NodeTests
         firstNode.Append(3);
 
         // Act & Assert
-        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() => firstNode.Append(2));
+        InvalidOperationException ex = Assert.ThrowsException<InvalidOperationException>(() => firstNode.Append(2));
         StringAssert.Contains(ex.Message, "already exists");
         StringAssert.Contains(ex.Message, "2");
     }
 
     [TestMethod]
-    public void Append_DuplicateOfFirstNode_ThrowsArgumentException()
+    public void Append_DuplicateOfFirstNode_ThrowsInvalidOperationException()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
@@ -213,23 +213,23 @@ public class NodeTests
         firstNode.Append(3);
 
         // Act & Assert
-        ArgumentException ex = Assert.ThrowsException<ArgumentException>(() => firstNode.Append(1));
+        InvalidOperationException ex = Assert.ThrowsException<InvalidOperationException>(() => firstNode.Append(1));
         StringAssert.Contains(ex.Message, "already exists");
     }
 
     [TestMethod]
-    public void Append_DuplicateString_ThrowsArgumentException()
+    public void Append_DuplicateString_ThrowsInvalidOperationException()
     {
         // Arrange
         NodeCollection<string> firstNode = new NodeCollection<string>("test");
         firstNode.Append("hello");
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => firstNode.Append("test"));
+        Assert.ThrowsException<InvalidOperationException>(() => firstNode.Append("test"));
     }
 
     [TestMethod]
-    public void Append_DuplicateInLargeList_ThrowsArgumentException()
+    public void Append_DuplicateInLargeList_ThrowsInvalidOperationException()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
@@ -239,7 +239,7 @@ public class NodeTests
         }
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => firstNode.Append(5));
+        Assert.ThrowsException<InvalidOperationException>(() => firstNode.Append(5));
     }
 
     // ==================== EXISTS TESTS ====================
@@ -587,7 +587,7 @@ public class NodeTests
     }
 
     [TestMethod]
-    public void Add_DuplicateValue_ThrowsArgumentException()
+    public void Add_DuplicateValue_ThrowsInvalidOperationException()
     {
         // Testing Add (which calls Append)
         // Arrange
@@ -595,7 +595,7 @@ public class NodeTests
         firstNode.Add(2);
 
         // Act & Assert
-        Assert.ThrowsException<ArgumentException>(() => firstNode.Add(1));
+        Assert.ThrowsException<InvalidOperationException>(() => firstNode.Add(1));
     }
 
     [TestMethod]
