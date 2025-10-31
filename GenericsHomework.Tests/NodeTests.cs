@@ -1,53 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using Xunit;
-using GenericsHomework;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GenericsHomework.Tests;
 
+[TestClass]
 public class NodeTests
 {
     // ==================== CONSTRUCTOR TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void Constructor_ProperValue_Initializes()
     {
         // Arrange & Act
         NodeCollection<int> testNode = new NodeCollection<int>(10);
 
         // Assert
-        Assert.NotNull(testNode);
-        Assert.Equal(10, testNode.Value);
-        Assert.Same(testNode, testNode.Next);
+        Assert.IsNotNull(testNode);
+        Assert.AreEqual<int>(10, testNode.Value);
+        Assert.AreSame(testNode, testNode.Next);
     }
 
-    [Fact]
+    [TestMethod]
     public void Constructor_StringValue_Initializes()
     {
         // Arrange & Act
         NodeCollection<string> testNode = new NodeCollection<string>("test");
 
         // Assert
-        Assert.NotNull(testNode);
-        Assert.Equal("test", testNode.Value);
-        Assert.Same(testNode, testNode.Next);
+        Assert.IsNotNull(testNode);
+        Assert.AreEqual<string>("test", testNode.Value);
+        Assert.AreSame(testNode, testNode.Next);
     }
 
-    [Fact]
+    [TestMethod]
     public void Constructor_DoubleValue_Initializes()
     {
         // Arrange & Act
         NodeCollection<double> testNode = new NodeCollection<double>(3.14);
 
         // Assert
-        Assert.NotNull(testNode);
-        Assert.Equal(3.14, testNode.Value);
-        Assert.Same(testNode, testNode.Next);
+        Assert.IsNotNull(testNode);
+        Assert.AreEqual<double>(3.14, testNode.Value);
+        Assert.AreSame(testNode, testNode.Next);
     }
 
     // ==================== TOSTRING TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void ToString_ReturnsValueString_Success()
     {
         // Arrange
@@ -57,10 +55,10 @@ public class NodeTests
         string result = testNode.ToString();
 
         // Assert
-        Assert.Equal("TestValue", result);
+        Assert.AreEqual<string>("TestValue", result);
     }
 
-    [Fact]
+    [TestMethod]
     public void ToString_IntValue_ReturnsString()
     {
         // Arrange
@@ -70,10 +68,10 @@ public class NodeTests
         string result = testNode.ToString();
 
         // Assert
-        Assert.Equal("42", result);
+        Assert.AreEqual<string>("42", result);
     }
 
-    [Fact]
+    [TestMethod]
     public void ToString_NullValue_ReturnsEmptyString()
     {
         // Arrange
@@ -84,10 +82,10 @@ public class NodeTests
         string result = testNode.ToString();
 
         // Assert
-        Assert.Equal(string.Empty, result);
+        Assert.AreEqual<string>(string.Empty, result);
     }
 
-    [Fact]
+    [TestMethod]
     public void ToString_CustomType_CallsTypeToString()
     {
         // Arrange
@@ -98,12 +96,12 @@ public class NodeTests
         string result = node.ToString();
 
         // Assert
-        Assert.Equal("Alice (30)", result);
+        Assert.AreEqual<string>("Alice (30)", result);
     }
 
     // ==================== NEXT PROPERTY TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void Next_HasPrivateSetter_VerifiedByCircularStructure()
     {
         // This test verifies that Next has a private setter by ensuring
@@ -117,13 +115,13 @@ public class NodeTests
         firstNode.Append(2);
 
         // Assert
-        Assert.Equal(2, firstNode.Next.Value);
-        Assert.Same(firstNode, firstNode.Next.Next);
+        Assert.AreEqual<int>(2, firstNode.Next.Value);
+        Assert.AreSame(firstNode, firstNode.Next.Next);
     }
 
     // ==================== APPEND TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void Append_SingleNode_CreatesCircularList()
     {
         // Arrange
@@ -133,11 +131,11 @@ public class NodeTests
         firstNode.Append(2);
 
         // Assert
-        Assert.Equal(2, firstNode.Next.Value);
-        Assert.Same(firstNode, firstNode.Next.Next);
+        Assert.AreEqual<int>(2, firstNode.Next.Value);
+        Assert.AreSame(firstNode, firstNode.Next.Next);
     }
 
-    [Fact]
+    [TestMethod]
     public void Append_TwoNodes_MaintainsCircularStructure()
     {
         // Arrange
@@ -148,13 +146,13 @@ public class NodeTests
         firstNode.Append(3);
 
         // Assert
-        Assert.Equal(1, firstNode.Value);
-        Assert.Equal(2, firstNode.Next.Value);
-        Assert.Equal(3, firstNode.Next.Next.Value);
-        Assert.Same(firstNode, firstNode.Next.Next.Next);
+        Assert.AreEqual<int>(1, firstNode.Value);
+        Assert.AreEqual<int>(2, firstNode.Next.Value);
+        Assert.AreEqual<int>(3, firstNode.Next.Next.Value);
+        Assert.AreSame(firstNode, firstNode.Next.Next.Next);
     }
 
-    [Fact]
+    [TestMethod]
     public void Append_MultipleNodes_MaintainsCircularStructure()
     {
         // Arrange
@@ -166,16 +164,16 @@ public class NodeTests
         firstNode.Append(4);
         firstNode.Append(5);
 
-        // Assert - Traverse the entire circular list
-        Assert.Equal(1, firstNode.Value);
-        Assert.Equal(2, firstNode.Next.Value);
-        Assert.Equal(3, firstNode.Next.Next.Value);
-        Assert.Equal(4, firstNode.Next.Next.Next.Value);
-        Assert.Equal(5, firstNode.Next.Next.Next.Next.Value);
-        Assert.Same(firstNode, firstNode.Next.Next.Next.Next.Next);
+        // Assert
+        Assert.AreEqual<int>(1, firstNode.Value);
+        Assert.AreEqual<int>(2, firstNode.Next.Value);
+        Assert.AreEqual<int>(3, firstNode.Next.Next.Value);
+        Assert.AreEqual<int>(4, firstNode.Next.Next.Next.Value);
+        Assert.AreEqual<int>(5, firstNode.Next.Next.Next.Next.Value);
+        Assert.AreSame(firstNode, firstNode.Next.Next.Next.Next.Next);
     }
 
-    [Fact]
+    [TestMethod]
     public void Append_StringNodes_Works()
     {
         // Arrange
@@ -186,14 +184,14 @@ public class NodeTests
         firstNode.Append("cherry");
 
         // Assert
-        Assert.Equal("apple", firstNode.Value);
-        Assert.Equal("banana", firstNode.Next.Value);
-        Assert.Equal("cherry", firstNode.Next.Next.Value);
-        Assert.Same(firstNode, firstNode.Next.Next.Next);
+        Assert.AreEqual<string>("apple", firstNode.Value);
+        Assert.AreEqual<string>("banana", firstNode.Next.Value);
+        Assert.AreEqual<string>("cherry", firstNode.Next.Next.Value);
+        Assert.AreSame(firstNode, firstNode.Next.Next.Next);
     }
 
-    [Fact]
-    public void Append_DuplicateValue_ThrowsArgumentException()
+    [TestMethod]
+    public void Append_DuplicateValue_ThrowsInvalidOperationException()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
@@ -201,13 +199,13 @@ public class NodeTests
         firstNode.Append(3);
 
         // Act & Assert
-        ArgumentException ex = Assert.Throws<ArgumentException>(() => firstNode.Append(2));
-        Assert.Contains("already exists", ex.Message);
-        Assert.Contains("2", ex.Message);
+        InvalidOperationException ex = Assert.ThrowsException<InvalidOperationException>(() => firstNode.Append(2));
+        StringAssert.Contains(ex.Message, "already exists");
+        StringAssert.Contains(ex.Message, "2");
     }
 
-    [Fact]
-    public void Append_DuplicateOfFirstNode_ThrowsArgumentException()
+    [TestMethod]
+    public void Append_DuplicateOfFirstNode_ThrowsInvalidOperationException()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
@@ -215,23 +213,23 @@ public class NodeTests
         firstNode.Append(3);
 
         // Act & Assert
-        ArgumentException ex = Assert.Throws<ArgumentException>(() => firstNode.Append(1));
-        Assert.Contains("already exists", ex.Message);
+        InvalidOperationException ex = Assert.ThrowsException<InvalidOperationException>(() => firstNode.Append(1));
+        StringAssert.Contains(ex.Message, "already exists");
     }
 
-    [Fact]
-    public void Append_DuplicateString_ThrowsArgumentException()
+    [TestMethod]
+    public void Append_DuplicateString_ThrowsInvalidOperationException()
     {
         // Arrange
         NodeCollection<string> firstNode = new NodeCollection<string>("test");
         firstNode.Append("hello");
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => firstNode.Append("test"));
+        Assert.ThrowsException<InvalidOperationException>(() => firstNode.Append("test"));
     }
 
-    [Fact]
-    public void Append_DuplicateInLargeList_ThrowsArgumentException()
+    [TestMethod]
+    public void Append_DuplicateInLargeList_ThrowsInvalidOperationException()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
@@ -241,12 +239,12 @@ public class NodeTests
         }
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => firstNode.Append(5));
+        Assert.ThrowsException<InvalidOperationException>(() => firstNode.Append(5));
     }
 
     // ==================== EXISTS TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void Exists_ValueInFirstNode_ReturnsTrue()
     {
         // Arrange
@@ -258,10 +256,10 @@ public class NodeTests
         bool result = firstNode.Exists(1);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [TestMethod]
     public void Exists_ValueInMiddleNode_ReturnsTrue()
     {
         // Arrange
@@ -274,10 +272,10 @@ public class NodeTests
         bool result = firstNode.Exists(3);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [TestMethod]
     public void Exists_ValueInLastNode_ReturnsTrue()
     {
         // Arrange
@@ -289,10 +287,10 @@ public class NodeTests
         bool result = firstNode.Exists(3);
 
         // Assert
-        Assert.True(result);
+        Assert.IsTrue(result);
     }
 
-    [Fact]
+    [TestMethod]
     public void Exists_AllValuesInList_ReturnsTrue()
     {
         // Arrange
@@ -301,12 +299,12 @@ public class NodeTests
         firstNode.Append(3);
 
         // Act & Assert
-        Assert.True(firstNode.Exists(1));
-        Assert.True(firstNode.Exists(2));
-        Assert.True(firstNode.Exists(3));
+        Assert.IsTrue(firstNode.Exists(1));
+        Assert.IsTrue(firstNode.Exists(2));
+        Assert.IsTrue(firstNode.Exists(3));
     }
 
-    [Fact]
+    [TestMethod]
     public void Exists_ValueNotInList_ReturnsFalse()
     {
         // Arrange
@@ -315,32 +313,32 @@ public class NodeTests
         firstNode.Append(3);
 
         // Act & Assert
-        Assert.False(firstNode.Exists(4));
-        Assert.False(firstNode.Exists(0));
-        Assert.False(firstNode.Exists(99));
+        Assert.IsFalse(firstNode.Exists(4));
+        Assert.IsFalse(firstNode.Exists(0));
+        Assert.IsFalse(firstNode.Exists(99));
     }
 
-    [Fact]
+    [TestMethod]
     public void Exists_SingleNode_ExistingValue_ReturnsTrue()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(42);
 
         // Act & Assert
-        Assert.True(firstNode.Exists(42));
+        Assert.IsTrue(firstNode.Exists(42));
     }
 
-    [Fact]
+    [TestMethod]
     public void Exists_SingleNode_NonExistingValue_ReturnsFalse()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(42);
 
         // Act & Assert
-        Assert.False(firstNode.Exists(1));
+        Assert.IsFalse(firstNode.Exists(1));
     }
 
-    [Fact]
+    [TestMethod]
     public void Exists_StringValues_Works()
     {
         // Arrange
@@ -349,13 +347,13 @@ public class NodeTests
         firstNode.Append("cherry");
 
         // Act & Assert
-        Assert.True(firstNode.Exists("apple"));
-        Assert.True(firstNode.Exists("banana"));
-        Assert.True(firstNode.Exists("cherry"));
-        Assert.False(firstNode.Exists("orange"));
+        Assert.IsTrue(firstNode.Exists("apple"));
+        Assert.IsTrue(firstNode.Exists("banana"));
+        Assert.IsTrue(firstNode.Exists("cherry"));
+        Assert.IsFalse(firstNode.Exists("orange"));
     }
 
-    [Fact]
+    [TestMethod]
     public void Exists_NullValue_Works()
     {
         // Arrange
@@ -363,13 +361,13 @@ public class NodeTests
         firstNode.Append("test");
 
         // Act & Assert
-        Assert.True(firstNode.Exists(null));
-        Assert.True(firstNode.Exists("test"));
+        Assert.IsTrue(firstNode.Exists(null));
+        Assert.IsTrue(firstNode.Exists("test"));
     }
 
     // ==================== CLEAR TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void Clear_MultipleNodes_RemovesAllButCurrent()
     {
         // Arrange
@@ -382,14 +380,14 @@ public class NodeTests
         firstNode.Clear();
 
         // Assert
-        Assert.Same(firstNode, firstNode.Next);
-        Assert.False(firstNode.Exists(2));
-        Assert.False(firstNode.Exists(3));
-        Assert.False(firstNode.Exists(4));
-        Assert.True(firstNode.Exists(1));
+        Assert.AreSame(firstNode, firstNode.Next);
+        Assert.IsFalse(firstNode.Exists(2));
+        Assert.IsFalse(firstNode.Exists(3));
+        Assert.IsFalse(firstNode.Exists(4));
+        Assert.IsTrue(firstNode.Exists(1));
     }
 
-    [Fact]
+    [TestMethod]
     public void Clear_SingleNode_RemainsUnchanged()
     {
         // Arrange
@@ -399,11 +397,11 @@ public class NodeTests
         firstNode.Clear();
 
         // Assert
-        Assert.Same(firstNode, firstNode.Next);
-        Assert.True(firstNode.Exists(1));
+        Assert.AreSame(firstNode, firstNode.Next);
+        Assert.IsTrue(firstNode.Exists(1));
     }
 
-    [Fact]
+    [TestMethod]
     public void Clear_TwoNodes_RemovesSecond()
     {
         // Arrange
@@ -414,12 +412,12 @@ public class NodeTests
         firstNode.Clear();
 
         // Assert
-        Assert.Same(firstNode, firstNode.Next);
-        Assert.True(firstNode.Exists(1));
-        Assert.False(firstNode.Exists(2));
+        Assert.AreSame(firstNode, firstNode.Next);
+        Assert.IsTrue(firstNode.Exists(1));
+        Assert.IsFalse(firstNode.Exists(2));
     }
 
-    [Fact]
+    [TestMethod]
     public void Clear_CanAppendAfterClearing()
     {
         // Arrange
@@ -433,12 +431,12 @@ public class NodeTests
         firstNode.Append(20);
 
         // Assert
-        Assert.Equal(10, firstNode.Next.Value);
-        Assert.Equal(20, firstNode.Next.Next.Value);
-        Assert.Same(firstNode, firstNode.Next.Next.Next);
+        Assert.AreEqual<int>(10, firstNode.Next.Value);
+        Assert.AreEqual<int>(20, firstNode.Next.Next.Value);
+        Assert.AreSame(firstNode, firstNode.Next.Next.Next);
     }
 
-    [Fact]
+    [TestMethod]
     public void Clear_CanAppendPreviousValues()
     {
         // Arrange
@@ -450,11 +448,11 @@ public class NodeTests
         firstNode.Append(2); // This should now work since 2 was removed
 
         // Assert
-        Assert.Equal(2, firstNode.Next.Value);
-        Assert.True(firstNode.Exists(2));
+        Assert.AreEqual<int>(2, firstNode.Next.Value);
+        Assert.IsTrue(firstNode.Exists(2));
     }
 
-    [Fact]
+    [TestMethod]
     public void Clear_SimplifiesStructure_FirstNodeIsolated()
     {
         // This test verifies that Clear() effectively isolates the current node
@@ -481,25 +479,25 @@ public class NodeTests
         firstNode.Clear();
 
         // Assert - First node is now isolated
-        Assert.Same(firstNode, firstNode.Next);
-        Assert.True(firstNode.Exists(1));
-        Assert.False(firstNode.Exists(2));
-        Assert.False(firstNode.Exists(3));
-        Assert.False(firstNode.Exists(4));
+        Assert.AreSame(firstNode, firstNode.Next);
+        Assert.IsTrue(firstNode.Exists(1));
+        Assert.IsFalse(firstNode.Exists(2));
+        Assert.IsFalse(firstNode.Exists(3));
+        Assert.IsFalse(firstNode.Exists(4));
 
         // The removed nodes still maintain their original structure
         // (they still point back through the chain to firstNode)
         // In this case, secondNode still has its Next pointer intact
-        Assert.Equal(2, secondNode.Value);
-        Assert.Equal(3, secondNode.Next.Value);
+        Assert.AreEqual<int>(2, secondNode.Value);
+        Assert.AreEqual<int>(3, secondNode.Next.Value);
 
         // This demonstrates we DON'T need to traverse and break the removed nodes' 
         // circular references - the GC will handle it when there are no external refs
     }
 
     // ==================== COUNT TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void Count_MultipleNodes_ReturnsCorrectCount()
     {
         // Arrange
@@ -508,212 +506,212 @@ public class NodeTests
         firstNode.Append(3);
         firstNode.Append(4);
         firstNode.Append(5);
-        
+
         // Act
         int count = firstNode.Count;
-        
+
         // Assert
-        Assert.Equal(5, count);
+        Assert.AreEqual<int>(5, count);
     }
 
-    [Fact]
+    [TestMethod]
     public void Count_SingleNode_ReturnsOne()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
-        
+
         // Act
         int count = firstNode.Count;
-        
+
         // Assert
-        Assert.Equal(1, count);
+        Assert.AreEqual<int>(1, count);
     }
 
-    [Fact]
+    [TestMethod]
     public void Count_AfterRemove_UpdatesCorrectly()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
-        Assert.Equal(3, firstNode.Count);
-        
+        Assert.AreEqual<int>(3, firstNode.Count);
+
         // Act
         firstNode.Remove(2);
-        
+
         // Assert
-        Assert.Equal(2, firstNode.Count);
+        Assert.AreEqual<int>(2, firstNode.Count);
     }
 
-    [Fact]
+    [TestMethod]
     public void Count_AfterClear_ReturnsOne()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
-        
+
         // Act
         firstNode.Clear();
-        
+
         // Assert
-        Assert.Single(firstNode);
+        Assert.AreEqual<int>(1, firstNode.Count);
     }
 
     // ==================== ICOLLECTION<T> IMPLEMENTATION TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void IsReadOnly_ReturnsFalse()
     {
         // Arrange
         NodeCollection<int> node = new NodeCollection<int>(1);
-        
+
         // Assert
-        Assert.False(node.IsReadOnly);
+        Assert.IsFalse(node.IsReadOnly);
     }
 
-    [Fact]
+    [TestMethod]
     public void Add_ProperNode_AppendsNode()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
-        
+
         // Act
         firstNode.Add(2);
         firstNode.Add(3);
-        
+
         // Assert
-        Assert.Equal(2, firstNode.Next.Value);
-        Assert.Equal(3, firstNode.Next.Next.Value);
-        Assert.Same(firstNode, firstNode.Next.Next.Next);
+        Assert.AreEqual<int>(2, firstNode.Next.Value);
+        Assert.AreEqual<int>(3, firstNode.Next.Next.Value);
+        Assert.AreSame(firstNode, firstNode.Next.Next.Next);
     }
 
-    [Fact]
-    public void Add_DuplicateValue_ThrowsArgumentException()
+    [TestMethod]
+    public void Add_DuplicateValue_ThrowsInvalidOperationException()
     {
         // Testing Add (which calls Append)
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Add(2);
-        
+
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => firstNode.Add(1));
+        Assert.ThrowsException<InvalidOperationException>(() => firstNode.Add(1));
     }
 
-    [Fact]
+    [TestMethod]
     public void Contains_ExistingValue_ReturnsTrue()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
-        
+
         // Act
         bool contains = firstNode.Contains(2);
-        
+
         // Assert
-        Assert.True(contains);
+        Assert.IsTrue(contains);
     }
 
-    [Fact]
+    [TestMethod]
     public void Contains_NonExistingValue_ReturnsFalse()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
-        
+
         // Act
         bool contains = firstNode.Contains(99);
-        
+
         // Assert
-        Assert.False(contains);
+        Assert.IsFalse(contains);
     }
 
-    [Fact]
+    [TestMethod]
     public void Remove_ExistingValue_RemovesNode()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
-        
+
         // Act
         bool removed = firstNode.Remove(2);
-        
+
         // Assert
-        Assert.True(removed);
-        Assert.False(firstNode.Exists(2));
-        Assert.Equal(3, firstNode.Next.Value);
+        Assert.IsTrue(removed);
+        Assert.IsFalse(firstNode.Exists(2));
+        Assert.AreEqual<int>(3, firstNode.Next.Value);
     }
 
-    [Fact]
+    [TestMethod]
     public void Remove_NonExistingValue_ReturnsFalse()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
-        
+
         // Act
         bool removed = firstNode.Remove(4);
-        
+
         // Assert
-        Assert.False(removed);
+        Assert.IsFalse(removed);
     }
 
-    [Fact]
+    [TestMethod]
     public void Remove_FirstNode_UpdatesHead()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         firstNode.Append(3);
-        
+
         // Act
         bool removed = firstNode.Remove(1);
-        
+
         // Assert
-        Assert.True(removed);
-        Assert.Equal(2, firstNode.Value); // Head should now be 2
-        Assert.Equal(3, firstNode.Next.Value);
+        Assert.IsTrue(removed);
+        Assert.AreEqual<int>(2, firstNode.Value); // Head should now be 2
+        Assert.AreEqual<int>(3, firstNode.Next.Value);
     }
 
-    [Fact]
+    [TestMethod]
     public void Remove_LastNode_LeavesOneNode()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
-        
+
         // Act
         bool removed = firstNode.Remove(2);
-        
+
         // Assert
-        Assert.True(removed);
-        Assert.Single(firstNode);
-        Assert.Same(firstNode, firstNode.Next);
+        Assert.IsTrue(removed);
+        Assert.AreEqual<int>(1, firstNode.Count);
+        Assert.AreSame(firstNode, firstNode.Next);
     }
 
-    [Fact]
+    [TestMethod]
     public void Remove_OnlySingleNode_ReturnsFalse()
     {
         // This test highlights the single-node removal edge case
         // Current implementation returns false when trying to remove the only node
         // This prevents breaking the circular structure
-        
+
         // Arrange
         NodeCollection<int> singleNode = new NodeCollection<int>(42);
-        
+
         // Act
         bool removed = singleNode.Remove(42);
-        
+
         // Assert
-        Assert.False(removed);
-        Assert.Equal(42, singleNode.Value);
-        Assert.Same(singleNode, singleNode.Next);
+        Assert.IsFalse(removed);
+        Assert.AreEqual<int>(42, singleNode.Value);
+        Assert.AreSame(singleNode, singleNode.Next);
     }
 
-    [Fact]
+    [TestMethod]
     public void Remove_MultipleNodesInSequence_MaintainsIntegrity()
     {
         // Arrange
@@ -722,21 +720,21 @@ public class NodeTests
         firstNode.Append(3);
         firstNode.Append(4);
         firstNode.Append(5);
-        
+
         // Act
         firstNode.Remove(2);
         firstNode.Remove(4);
-        
+
         // Assert
-        Assert.Equal(3, firstNode.Count);
-        Assert.Contains(1, firstNode);
-        Assert.DoesNotContain(2, firstNode);
-        Assert.Contains(3, firstNode);
-        Assert.DoesNotContain(4, firstNode);
-        Assert.Contains(5, firstNode);
+        Assert.AreEqual<int>(3, firstNode.Count);
+        CollectionAssert.Contains(firstNode.ToArray(), 1);
+        CollectionAssert.DoesNotContain(firstNode.ToArray(), 2);
+        CollectionAssert.Contains(firstNode.ToArray(), 3);
+        CollectionAssert.DoesNotContain(firstNode.ToArray(), 4);
+        CollectionAssert.Contains(firstNode.ToArray(), 5);
     }
 
-    [Fact]
+    [TestMethod]
     public void CopyTo_Array_CopiesElements()
     {
         // Arrange
@@ -744,56 +742,56 @@ public class NodeTests
         firstNode.Append(2);
         firstNode.Append(3);
         int[] array = new int[5];
-        
+
         // Act
         firstNode.CopyTo(array, 1);
-        
+
         // Assert
-        Assert.Equal(0, array[0]); // Default int value
-        Assert.Equal(1, array[1]);
-        Assert.Equal(2, array[2]);
-        Assert.Equal(3, array[3]);
-        Assert.Equal(0, array[4]); // Default int value
+        Assert.AreEqual<int>(0, array[0]); // Default int value
+        Assert.AreEqual<int>(1, array[1]);
+        Assert.AreEqual<int>(2, array[2]);
+        Assert.AreEqual<int>(3, array[3]);
+        Assert.AreEqual<int>(0, array[4]); // Default int value
     }
 
-    [Fact]
+    [TestMethod]
     public void CopyTo_NullArray_ThrowsArgumentNullException()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
-        
+
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => firstNode.CopyTo(null!, 0));
+        Assert.ThrowsException<ArgumentNullException>(() => firstNode.CopyTo(null!, 0));
     }
 
-    [Fact]
+    [TestMethod]
     public void CopyTo_NegativeIndex_ThrowsArgumentOutOfRangeException()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         int[] array = new int[5];
-        
+
         // Act & Assert
-        Assert.Throws<ArgumentOutOfRangeException>(() => firstNode.CopyTo(array, -1));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => firstNode.CopyTo(array, -1));
     }
 
-    [Fact]
+    [TestMethod]
     public void CopyTo_IndexAtArrayLength_ThrowsArgumentException()
     {
         // When arrayIndex equals array.Length, we're trying to start copying
         // at a position where there's no space, which should throw ArgumentException
-        
+
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(1);
         firstNode.Append(2);
         int[] array = new int[2];
-        
+
         // Act & Assert - arrayIndex=2 means start at position 2 in a 2-length array
         // This leaves no room for 2 elements, so should throw ArgumentException
-        Assert.Throws<ArgumentException>(() => firstNode.CopyTo(array, 2));
+        Assert.ThrowsException<ArgumentException>(() => firstNode.CopyTo(array, 2));
     }
 
-    [Fact]
+    [TestMethod]
     public void CopyTo_ArrayTooSmall_ThrowsArgumentException()
     {
         // Arrange
@@ -801,12 +799,12 @@ public class NodeTests
         firstNode.Append(2);
         firstNode.Append(3);
         int[] smallArray = new int[2];
-        
+
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => firstNode.CopyTo(smallArray, 0));
+        Assert.ThrowsException<ArgumentException>(() => firstNode.CopyTo(smallArray, 0));
     }
 
-    [Fact]
+    [TestMethod]
     public void CopyTo_StartIndexWithInsufficientSpace_ThrowsArgumentException()
     {
         // Arrange
@@ -814,14 +812,14 @@ public class NodeTests
         firstNode.Append(2);
         firstNode.Append(3);
         int[] array = new int[4];
-        
+
         // Act & Assert - Starting at index 2 means only 2 slots, but we have 3 elements
-        Assert.Throws<ArgumentException>(() => firstNode.CopyTo(array, 2));
+        Assert.ThrowsException<ArgumentException>(() => firstNode.CopyTo(array, 2));
     }
 
     // ==================== ENUMERATOR TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void GetEnumerator_IteratesThroughNodes()
     {
         // Arrange
@@ -830,18 +828,18 @@ public class NodeTests
         firstNode.Append(3);
         var enumerator = firstNode.GetEnumerator();
         int sum = 0;
-        
+
         // Act
         while (enumerator.MoveNext())
         {
             sum += enumerator.Current;
         }
-        
+
         // Assert
-        Assert.Equal(6, sum); // 1 + 2 + 3 = 6
+        Assert.AreEqual<int>(6, sum); // 1 + 2 + 3 = 6
     }
 
-    [Fact]
+    [TestMethod]
     public void ForEach_IteratesThroughAllNodes()
     {
         // Arrange
@@ -849,39 +847,39 @@ public class NodeTests
         firstNode.Append(2);
         firstNode.Append(3);
         List<int> values = new List<int>();
-        
+
         // Act
         foreach (int value in firstNode)
         {
             values.Add(value);
         }
-        
+
         // Assert
         int[] expected = new[] { 1, 2, 3 };
-        Assert.Equal(expected, values);
+        CollectionAssert.AreEqual(expected, values);
     }
 
-    [Fact]
+    [TestMethod]
     public void ForEach_SingleNode_IteratesOnce()
     {
         // Arrange
         NodeCollection<int> firstNode = new NodeCollection<int>(42);
         List<int> values = new List<int>();
-        
+
         // Act
         foreach (int value in firstNode)
         {
             values.Add(value);
         }
-        
+
         // Assert
-        Assert.Single(values);
-        Assert.Equal(42, values[0]);
+        Assert.AreEqual<int>(1, values.Count);
+        Assert.AreEqual<int>(42, values[0]);
     }
 
     // ==================== GENERIC TYPE TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void GenericType_CustomClass_Works()
     {
         // Arrange
@@ -893,12 +891,12 @@ public class NodeTests
         firstNode.Append(person2);
 
         // Assert
-        Assert.Same(person1, firstNode.Value);
-        Assert.Same(person2, firstNode.Next.Value);
-        Assert.True(firstNode.Exists(person1));
+        Assert.AreSame(person1, firstNode.Value);
+        Assert.AreSame(person2, firstNode.Next.Value);
+        Assert.IsTrue(firstNode.Exists(person1));
     }
 
-    [Fact]
+    [TestMethod]
     public void GenericType_CustomStruct_Works()
     {
         // Arrange
@@ -910,14 +908,14 @@ public class NodeTests
         firstNode.Append(point2);
 
         // Assert
-        Assert.Equal(point1, firstNode.Value);
-        Assert.Equal(point2, firstNode.Next.Value);
-        Assert.True(firstNode.Exists(point1));
+        Assert.AreEqual<Point>(point1, firstNode.Value);
+        Assert.AreEqual<Point>(point2, firstNode.Next.Value);
+        Assert.IsTrue(firstNode.Exists(point1));
     }
 
     // ==================== LARGE LIST TESTS ====================
-    
-    [Fact]
+
+    [TestMethod]
     public void LargeList_MaintainsCircularIntegrity()
     {
         // Arrange
@@ -933,13 +931,13 @@ public class NodeTests
         NodeCollection<int> current = firstNode;
         for (int i = 0; i < 100; i++)
         {
-            Assert.Equal(i, current.Value);
+            Assert.AreEqual<int>(i, current.Value);
             current = current.Next;
         }
-        Assert.Same(firstNode, current); // Should circle back to start
+        Assert.AreSame(firstNode, current); // Should circle back to start
     }
 
-    [Fact]
+    [TestMethod]
     public void LargeList_Count_ReturnsCorrectValue()
     {
         // Arrange
@@ -953,11 +951,11 @@ public class NodeTests
         int count = firstNode.Count;
 
         // Assert
-        Assert.Equal(50, count);
+        Assert.AreEqual<int>(50, count);
     }
 
     // ==================== HELPER CLASSES ====================
-    
+
     private sealed class Person
     {
         public string Name { get; set; } = string.Empty;
