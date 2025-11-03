@@ -3,8 +3,8 @@
 [TestClass]
 public sealed class ProgramTests
 {
-    private static readonly string[] TestInputSequence = 
-    { 
+    private static readonly string[] TestInputSequence =
+    {
         "3 + 4",      // Valid calculation
         "10 - 5",     // Another valid one
         "invalid",    // Invalid input
@@ -60,25 +60,25 @@ public sealed class ProgramTests
         // Arrange
         var outputs = new List<string>();
         var inputs = new Queue<string>(TestInputSequence);
-        
+
         var program = new Program
         {
             WriteLine = s => outputs.Add(s),
             ReadLine = () => inputs.Dequeue()
         };
-        
+
         var calculator = new Calculator();
-        
+
         // Act - Simulate the Main() logic
         program.WriteLine("Enter calculation (e.g., '3 + 4') or 'exit' to quit:");
-        
+
         while (true)
         {
             var input = program.ReadLine();
-            if (string.IsNullOrWhiteSpace(input) || 
+            if (string.IsNullOrWhiteSpace(input) ||
                 input.Equals("exit", StringComparison.OrdinalIgnoreCase))
                 break;
-                
+
             if (calculator.TryCalculate(input, out int result))
             {
                 program.WriteLine($"Result: {result}");
@@ -88,12 +88,42 @@ public sealed class ProgramTests
                 program.WriteLine("Invalid calculation. Use format: number operator number (e.g., '3 + 4')");
             }
         }
-        
+
         // Assert
         Assert.HasCount(4, outputs);
         Assert.AreEqual<string>("Enter calculation (e.g., '3 + 4') or 'exit' to quit:", outputs[0]);
         Assert.AreEqual<string>("Result: 7", outputs[1]);
         Assert.AreEqual<string>("Result: 5", outputs[2]);
         Assert.Contains("Invalid calculation", outputs[3]);
+    }
+
+
+    [TestMethod]
+    public void Main_ShouldExitOnBlankInput()
+    {
+        // Arrange
+        var output = new List<string>();
+        var inputs = new Queue<string>(new[] { "" }); // blank input => exit immediately
+
+        var program = new Program
+        {
+            WriteLine = s => output.Add(s),
+            ReadLine = () => inputs.Dequeue()
+        };
+
+        var calculator = new Calculator();
+
+        // Act
+        program.WriteLine("Enter calculation (e.g., '3 + 4') or 'exit' to quit:");
+
+        while (true)
+        {
+            var input = program.ReadLine();
+            if (string.IsNullOrWhiteSpace(input) || input.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                break;
+        }
+
+        // Assert
+        Assert.ContainsSingle(output); // only initial prompt
     }
 }
