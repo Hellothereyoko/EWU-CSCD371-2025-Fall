@@ -1,4 +1,4 @@
-﻿namespace Calculate;
+﻿namespace Calculate_;
 
 public class Program
 {
