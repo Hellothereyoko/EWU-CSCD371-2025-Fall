@@ -90,10 +90,10 @@ public sealed class ProgramTests
         }
         
         // Assert
-        Assert.AreEqual<int>(4, outputs.Count);
+        Assert.HasCount(4, outputs);
         Assert.AreEqual<string>("Enter calculation (e.g., '3 + 4') or 'exit' to quit:", outputs[0]);
         Assert.AreEqual<string>("Result: 7", outputs[1]);
         Assert.AreEqual<string>("Result: 5", outputs[2]);
-        Assert.IsTrue(outputs[3].Contains("Invalid calculation"));
+        Assert.Contains("Invalid calculation", outputs[3]);
     }
 }
