@@ -1,4 +1,4 @@
-﻿namespace Calculate_;
+﻿namespace Calculate;
 
 public class Calculator
 {
