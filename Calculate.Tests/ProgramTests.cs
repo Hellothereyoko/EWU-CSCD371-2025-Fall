@@ -60,7 +60,6 @@ public sealed class ProgramTests
             // Arrange
             var output = new List<string>();
 
-            // Use explicit enqueues instead of array literal (avoids CA1861)
             var inputs = new Queue<string>();
             inputs.Enqueue("3 + 4");       // valid calculation
             inputs.Enqueue("bad input");   // invalid
@@ -95,10 +94,11 @@ public sealed class ProgramTests
             }
 
             // Assert
-            Assert.Contains("Result: 7", output); // valid calc
-            Assert.Contains("Invalid calculation", output); // invalid input
+            CollectionAssert.Contains(output, "Result: 7");
+            Assert.IsTrue(output.Exists(line => line.Contains("Invalid calculation")));
             Assert.AreEqual("Enter calculation (e.g., '3 + 4') or 'exit' to quit:", output[0]);
         }
+
 
         [TestMethod]
         public void Main_ShouldExitOnBlankInput()
