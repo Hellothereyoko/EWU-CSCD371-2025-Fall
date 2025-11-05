@@ -1,8 +1,27 @@
-﻿using Calculate;
+﻿namespace Calculate.Tests;
 
 [TestClass]
 public sealed class ProgramTests
 {
+    private static readonly string[] ValidCalculationInputs = new[] { "5 + 3", "exit" };
+    private static readonly string[] InvalidCalculationInputs = new[] { "invalid input", "exit" };
+    private static readonly string[] MultipleCalculationInputs = new[]
+    {
+        "10 - 5",
+        "3 * 4",
+        "20 / 4",
+        "bad",
+        "exit"
+    };
+    private static readonly string[] MixedValidInvalidInputs = new[]
+    {
+        "1 + 1",
+        "no spaces",
+        "100 / 10",
+        "exit"
+    };
+    private static readonly string[] ExitCommandVariations = new[] { "EXIT", "exit", "Exit" };
+
     [TestMethod]
     public void Constructor_InitializesWriteLineAndReadLine_Success()
     {
@@ -98,7 +117,7 @@ public sealed class ProgramTests
     public void Main_ValidCalculation_OutputsCorrectResult()
     {
         // Arrange
-        var inputs = string.Join(Environment.NewLine, new[] { "5 + 3", "exit" });
+        var inputs = string.Join(Environment.NewLine, ValidCalculationInputs);
         
         using var writer = new StringWriter();
         Console.SetOut(writer);
@@ -119,7 +138,7 @@ public sealed class ProgramTests
     public void Main_InvalidCalculation_OutputsErrorMessage()
     {
         // Arrange
-        var inputs = string.Join(Environment.NewLine, new[] { "invalid input", "exit" });
+        var inputs = string.Join(Environment.NewLine, InvalidCalculationInputs);
 
         using var writer = new StringWriter();
         Console.SetOut(writer);
@@ -179,14 +198,7 @@ public sealed class ProgramTests
     public void Main_MultipleCalculations_ProcessesAllCorrectly()
     {
         // Arrange
-        var inputs = string.Join(Environment.NewLine, new[]
-        {
-            "10 - 5",    // Valid: 5
-            "3 * 4",     // Valid: 12
-            "20 / 4",    // Valid: 5
-            "bad",       // Invalid
-            "exit"
-        });
+        var inputs = string.Join(Environment.NewLine, MultipleCalculationInputs);
 
         using var writer = new StringWriter();
         Console.SetOut(writer);
@@ -208,13 +220,7 @@ public sealed class ProgramTests
     public void Main_MixedValidAndInvalid_HandlesAll()
     {
         // Arrange
-        var inputs = string.Join(Environment.NewLine, new[]
-        {
-            "1 + 1",     // Valid: 2
-            "no spaces", // Invalid
-            "100 / 10",  // Valid: 10
-            "exit"
-        });
+        var inputs = string.Join(Environment.NewLine, MixedValidInvalidInputs);
 
         using var writer = new StringWriter();
         Console.SetOut(writer);
@@ -236,7 +242,7 @@ public sealed class ProgramTests
     public void Main_ExitCommandCaseInsensitive_ExitsCorrectly()
     {
         // Arrange
-        var inputs = string.Join(Environment.NewLine, new[] { "EXIT", "exit", "Exit" });
+        var inputs = string.Join(Environment.NewLine, ExitCommandVariations);
 
         using var writer = new StringWriter();
         Console.SetOut(writer);
