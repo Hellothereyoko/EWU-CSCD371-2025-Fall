@@ -118,20 +118,27 @@ public sealed class ProgramTests
     {
         // Arrange
         var inputs = string.Join(Environment.NewLine, ValidCalculationInputs);
+        var writer = new StringWriter();
+        var reader = new StringReader(inputs);
         
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
-        
-        using var reader = new StringReader(inputs);
-        Console.SetIn(reader);
+        try
+        {
+            Console.SetOut(writer);
+            Console.SetIn(reader);
 
-        // Act
-        Program.Main();
+            // Act
+            Program.Main();
 
-        // Assert
-        var output = writer.ToString();
-        Assert.Contains("Result: 8", output);
-        Assert.Contains("Enter calculation", output);
+            // Assert
+            var output = writer.ToString();
+            Assert.Contains("Result: 8", output);
+            Assert.Contains("Enter calculation", output);
+        }
+        finally
+        {
+            writer.Dispose();
+            reader.Dispose();
+        }
     }
 
     [TestMethod]
@@ -139,59 +146,82 @@ public sealed class ProgramTests
     {
         // Arrange
         var inputs = string.Join(Environment.NewLine, InvalidCalculationInputs);
+        var writer = new StringWriter();
+        var reader = new StringReader(inputs);
 
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
-        
-        using var reader = new StringReader(inputs);
-        Console.SetIn(reader);
+        try
+        {
+            Console.SetOut(writer);
+            Console.SetIn(reader);
 
-        // Act
-        Program.Main();
+            // Act
+            Program.Main();
 
-        // Assert
-        var output = writer.ToString();
-        Assert.Contains("Invalid calculation", output);
+            // Assert
+            var output = writer.ToString();
+            Assert.Contains("Invalid calculation", output);
+        }
+        finally
+        {
+            writer.Dispose();
+            reader.Dispose();
+        }
     }
 
     [TestMethod]
     public void Main_BlankInput_ExitsImmediately()
     {
         // Arrange
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
+        var writer = new StringWriter();
+        var reader = new StringReader(Environment.NewLine);
         
-        using var reader = new StringReader(Environment.NewLine);
-        Console.SetIn(reader);
+        try
+        {
+            Console.SetOut(writer);
+            Console.SetIn(reader);
 
-        // Act
-        Program.Main();
+            // Act
+            Program.Main();
 
-        // Assert
-        var output = writer.ToString();
-        Assert.Contains("Enter calculation", output);
-        var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        Assert.HasCount(1, lines);
+            // Assert
+            var output = writer.ToString();
+            Assert.Contains("Enter calculation", output);
+            var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+            Assert.HasCount(1, lines);
+        }
+        finally
+        {
+            writer.Dispose();
+            reader.Dispose();
+        }
     }
 
     [TestMethod]
     public void Main_ExitCommand_ExitsWithoutProcessing()
     {
         // Arrange
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
+        var writer = new StringWriter();
+        var reader = new StringReader("exit");
         
-        using var reader = new StringReader("exit");
-        Console.SetIn(reader);
+        try
+        {
+            Console.SetOut(writer);
+            Console.SetIn(reader);
 
-        // Act
-        Program.Main();
+            // Act
+            Program.Main();
 
-        // Assert
-        var output = writer.ToString();
-        Assert.Contains("Enter calculation", output);
-        Assert.DoesNotContain("Result:", output);
-        Assert.DoesNotContain("Invalid calculation", output);
+            // Assert
+            var output = writer.ToString();
+            Assert.Contains("Enter calculation", output);
+            Assert.DoesNotContain("Result:", output);
+            Assert.DoesNotContain("Invalid calculation", output);
+        }
+        finally
+        {
+            writer.Dispose();
+            reader.Dispose();
+        }
     }
 
     [TestMethod]
@@ -199,21 +229,28 @@ public sealed class ProgramTests
     {
         // Arrange
         var inputs = string.Join(Environment.NewLine, MultipleCalculationInputs);
+        var writer = new StringWriter();
+        var reader = new StringReader(inputs);
 
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
-        
-        using var reader = new StringReader(inputs);
-        Console.SetIn(reader);
+        try
+        {
+            Console.SetOut(writer);
+            Console.SetIn(reader);
 
-        // Act
-        Program.Main();
+            // Act
+            Program.Main();
 
-        // Assert
-        var output = writer.ToString();
-        Assert.Contains("Result: 5", output);
-        Assert.Contains("Result: 12", output);
-        Assert.Contains("Invalid calculation", output);
+            // Assert
+            var output = writer.ToString();
+            Assert.Contains("Result: 5", output);
+            Assert.Contains("Result: 12", output);
+            Assert.Contains("Invalid calculation", output);
+        }
+        finally
+        {
+            writer.Dispose();
+            reader.Dispose();
+        }
     }
 
     [TestMethod]
@@ -221,21 +258,28 @@ public sealed class ProgramTests
     {
         // Arrange
         var inputs = string.Join(Environment.NewLine, MixedValidInvalidInputs);
+        var writer = new StringWriter();
+        var reader = new StringReader(inputs);
 
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
-        
-        using var reader = new StringReader(inputs);
-        Console.SetIn(reader);
+        try
+        {
+            Console.SetOut(writer);
+            Console.SetIn(reader);
 
-        // Act
-        Program.Main();
+            // Act
+            Program.Main();
 
-        // Assert
-        var output = writer.ToString();
-        Assert.Contains("Result: 2", output);
-        Assert.Contains("Result: 10", output);
-        Assert.Contains("Invalid calculation", output);
+            // Assert
+            var output = writer.ToString();
+            Assert.Contains("Result: 2", output);
+            Assert.Contains("Result: 10", output);
+            Assert.Contains("Invalid calculation", output);
+        }
+        finally
+        {
+            writer.Dispose();
+            reader.Dispose();
+        }
     }
 
     [TestMethod]
@@ -243,19 +287,26 @@ public sealed class ProgramTests
     {
         // Arrange
         var inputs = string.Join(Environment.NewLine, ExitCommandVariations);
+        var writer = new StringWriter();
+        var reader = new StringReader(inputs);
 
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
-        
-        using var reader = new StringReader(inputs);
-        Console.SetIn(reader);
+        try
+        {
+            Console.SetOut(writer);
+            Console.SetIn(reader);
 
-        // Act
-        Program.Main();
+            // Act
+            Program.Main();
 
-        // Assert
-        var output = writer.ToString();
-        // Should exit on first EXIT command
-        Assert.Contains("Enter calculation", output);
+            // Assert
+            var output = writer.ToString();
+            // Should exit on first EXIT command
+            Assert.Contains("Enter calculation", output);
+        }
+        finally
+        {
+            writer.Dispose();
+            reader.Dispose();
+        }
     }
 }
