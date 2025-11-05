@@ -22,6 +22,9 @@ public sealed class ProgramTests
     };
     private static readonly string[] ExitCommandVariations = new[] { "EXIT", "exit", "Exit" };
 
+    // Lock object to prevent parallel test execution from interfering with Console redirection
+    private static readonly object ConsoleLock = new();
+
     [TestMethod]
     public void Constructor_InitializesWriteLineAndReadLine_Success()
     {
@@ -116,197 +119,246 @@ public sealed class ProgramTests
     [TestMethod]
     public void Main_ValidCalculation_OutputsCorrectResult()
     {
-        // Arrange
-        var inputs = string.Join(Environment.NewLine, ValidCalculationInputs);
-        var writer = new StringWriter();
-        var reader = new StringReader(inputs);
-        
-        try
+        lock (ConsoleLock)
         {
-            Console.SetOut(writer);
-            Console.SetIn(reader);
+            // Arrange
+            var inputs = string.Join(Environment.NewLine, ValidCalculationInputs);
+            var writer = new StringWriter();
+            var reader = new StringReader(inputs);
+            var originalOut = Console.Out;
+            var originalIn = Console.In;
 
-            // Act
-            Program.Main();
+            try
+            {
+                Console.SetOut(writer);
+                Console.SetIn(reader);
 
-            // Assert
-            var output = writer.ToString();
-            Assert.Contains("Result: 8", output);
-            Assert.Contains("Enter calculation", output);
-        }
-        finally
-        {
-            writer.Dispose();
-            reader.Dispose();
+                // Act
+                Program.Main();
+
+                // Assert
+                var output = writer.ToString();
+                Assert.Contains("Result: 8", output);
+                Assert.Contains("Enter calculation", output);
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+                Console.SetIn(originalIn);
+                writer.Dispose();
+                reader.Dispose();
+            }
         }
     }
 
     [TestMethod]
     public void Main_InvalidCalculation_OutputsErrorMessage()
     {
-        // Arrange
-        var inputs = string.Join(Environment.NewLine, InvalidCalculationInputs);
-        var writer = new StringWriter();
-        var reader = new StringReader(inputs);
-
-        try
+        lock (ConsoleLock)
         {
-            Console.SetOut(writer);
-            Console.SetIn(reader);
+            // Arrange
+            var inputs = string.Join(Environment.NewLine, InvalidCalculationInputs);
+            var writer = new StringWriter();
+            var reader = new StringReader(inputs);
+            var originalOut = Console.Out;
+            var originalIn = Console.In;
 
-            // Act
-            Program.Main();
+            try
+            {
+                Console.SetOut(writer);
+                Console.SetIn(reader);
 
-            // Assert
-            var output = writer.ToString();
-            Assert.Contains("Invalid calculation", output);
-        }
-        finally
-        {
-            writer.Dispose();
-            reader.Dispose();
+                // Act
+                Program.Main();
+
+                // Assert
+                var output = writer.ToString();
+                Assert.Contains("Invalid calculation", output);
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+                Console.SetIn(originalIn);
+                writer.Dispose();
+                reader.Dispose();
+            }
         }
     }
 
     [TestMethod]
     public void Main_BlankInput_ExitsImmediately()
     {
-        // Arrange
-        var writer = new StringWriter();
-        var reader = new StringReader(Environment.NewLine);
-        
-        try
+        lock (ConsoleLock)
         {
-            Console.SetOut(writer);
-            Console.SetIn(reader);
+            // Arrange
+            var writer = new StringWriter();
+            var reader = new StringReader(Environment.NewLine);
+            var originalOut = Console.Out;
+            var originalIn = Console.In;
 
-            // Act
-            Program.Main();
+            try
+            {
+                Console.SetOut(writer);
+                Console.SetIn(reader);
 
-            // Assert
-            var output = writer.ToString();
-            Assert.Contains("Enter calculation", output);
-            var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-            Assert.HasCount(1, lines);
-        }
-        finally
-        {
-            writer.Dispose();
-            reader.Dispose();
+                // Act
+                Program.Main();
+
+                // Assert
+                var output = writer.ToString();
+                Assert.Contains("Enter calculation", output);
+                var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                Assert.HasCount(1, lines);
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+                Console.SetIn(originalIn);
+                writer.Dispose();
+                reader.Dispose();
+            }
         }
     }
 
     [TestMethod]
     public void Main_ExitCommand_ExitsWithoutProcessing()
     {
-        // Arrange
-        var writer = new StringWriter();
-        var reader = new StringReader("exit");
-        
-        try
+        lock (ConsoleLock)
         {
-            Console.SetOut(writer);
-            Console.SetIn(reader);
+            // Arrange
+            var writer = new StringWriter();
+            var reader = new StringReader("exit");
+            var originalOut = Console.Out;
+            var originalIn = Console.In;
 
-            // Act
-            Program.Main();
+            try
+            {
+                Console.SetOut(writer);
+                Console.SetIn(reader);
 
-            // Assert
-            var output = writer.ToString();
-            Assert.Contains("Enter calculation", output);
-            Assert.DoesNotContain("Result:", output);
-            Assert.DoesNotContain("Invalid calculation", output);
-        }
-        finally
-        {
-            writer.Dispose();
-            reader.Dispose();
+                // Act
+                Program.Main();
+
+                // Assert
+                var output = writer.ToString();
+                Assert.Contains("Enter calculation", output);
+                Assert.DoesNotContain("Result:", output);
+                Assert.DoesNotContain("Invalid calculation", output);
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+                Console.SetIn(originalIn);
+                writer.Dispose();
+                reader.Dispose();
+            }
         }
     }
 
     [TestMethod]
     public void Main_MultipleCalculations_ProcessesAllCorrectly()
     {
-        // Arrange
-        var inputs = string.Join(Environment.NewLine, MultipleCalculationInputs);
-        var writer = new StringWriter();
-        var reader = new StringReader(inputs);
-
-        try
+        lock (ConsoleLock)
         {
-            Console.SetOut(writer);
-            Console.SetIn(reader);
+            // Arrange
+            var inputs = string.Join(Environment.NewLine, MultipleCalculationInputs);
+            var writer = new StringWriter();
+            var reader = new StringReader(inputs);
+            var originalOut = Console.Out;
+            var originalIn = Console.In;
 
-            // Act
-            Program.Main();
+            try
+            {
+                Console.SetOut(writer);
+                Console.SetIn(reader);
 
-            // Assert
-            var output = writer.ToString();
-            Assert.Contains("Result: 5", output);
-            Assert.Contains("Result: 12", output);
-            Assert.Contains("Invalid calculation", output);
-        }
-        finally
-        {
-            writer.Dispose();
-            reader.Dispose();
+                // Act
+                Program.Main();
+
+                // Assert
+                var output = writer.ToString();
+                Assert.Contains("Result: 5", output);
+                Assert.Contains("Result: 12", output);
+                Assert.Contains("Invalid calculation", output);
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+                Console.SetIn(originalIn);
+                writer.Dispose();
+                reader.Dispose();
+            }
         }
     }
 
     [TestMethod]
     public void Main_MixedValidAndInvalid_HandlesAll()
     {
-        // Arrange
-        var inputs = string.Join(Environment.NewLine, MixedValidInvalidInputs);
-        var writer = new StringWriter();
-        var reader = new StringReader(inputs);
-
-        try
+        lock (ConsoleLock)
         {
-            Console.SetOut(writer);
-            Console.SetIn(reader);
+            // Arrange
+            var inputs = string.Join(Environment.NewLine, MixedValidInvalidInputs);
+            var writer = new StringWriter();
+            var reader = new StringReader(inputs);
+            var originalOut = Console.Out;
+            var originalIn = Console.In;
 
-            // Act
-            Program.Main();
+            try
+            {
+                Console.SetOut(writer);
+                Console.SetIn(reader);
 
-            // Assert
-            var output = writer.ToString();
-            Assert.Contains("Result: 2", output);
-            Assert.Contains("Result: 10", output);
-            Assert.Contains("Invalid calculation", output);
-        }
-        finally
-        {
-            writer.Dispose();
-            reader.Dispose();
+                // Act
+                Program.Main();
+
+                // Assert
+                var output = writer.ToString();
+                Assert.Contains("Result: 2", output);
+                Assert.Contains("Result: 10", output);
+                Assert.Contains("Invalid calculation", output);
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+                Console.SetIn(originalIn);
+                writer.Dispose();
+                reader.Dispose();
+            }
         }
     }
 
     [TestMethod]
     public void Main_ExitCommandCaseInsensitive_ExitsCorrectly()
     {
-        // Arrange
-        var inputs = string.Join(Environment.NewLine, ExitCommandVariations);
-        var writer = new StringWriter();
-        var reader = new StringReader(inputs);
-
-        try
+        lock (ConsoleLock)
         {
-            Console.SetOut(writer);
-            Console.SetIn(reader);
+            // Arrange
+            var inputs = string.Join(Environment.NewLine, ExitCommandVariations);
+            var writer = new StringWriter();
+            var reader = new StringReader(inputs);
+            var originalOut = Console.Out;
+            var originalIn = Console.In;
 
-            // Act
-            Program.Main();
+            try
+            {
+                Console.SetOut(writer);
+                Console.SetIn(reader);
 
-            // Assert
-            var output = writer.ToString();
-            // Should exit on first EXIT command
-            Assert.Contains("Enter calculation", output);
-        }
-        finally
-        {
-            writer.Dispose();
-            reader.Dispose();
+                // Act
+                Program.Main();
+
+                // Assert
+                var output = writer.ToString();
+                // Should exit on first EXIT command
+                Assert.Contains("Enter calculation", output);
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+                Console.SetIn(originalIn);
+                writer.Dispose();
+                reader.Dispose();
+            }
         }
     }
 }
