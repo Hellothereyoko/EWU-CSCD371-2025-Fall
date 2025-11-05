@@ -128,5 +128,5 @@ public sealed class ProgramTests
             }
 
         // Assert
-        Assert.AreEqual<int>(1, output.Count);        }
+        Assert.HasCount(1, output);        }
     }
