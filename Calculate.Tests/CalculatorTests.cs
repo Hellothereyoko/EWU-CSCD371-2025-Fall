@@ -18,43 +18,183 @@ public sealed class CalculatorTests
     }
 
     [TestMethod]
-    public void TryCalculate_ValidInput_ReturnsTrue()
+    public void Add_ReturnsCorrectSum_Success()
     {
-        // Arrange
-        var calculator = new Calculator();
-        var testCases = new[]
-        {
-            ("3 + 4", 7),
-            ("10 - 3", 7),
-            ("3 * 4", 12),
-            ("12 / 3", 4)
-        };
+        // Arrange & Act
+        var result = Calculator.Add(3, 4);
 
-        // Act & Assert
-        foreach (var (input, expected) in testCases)
-        {
-            Assert.IsTrue(calculator.TryCalculate(input, out int result));
-            Assert.AreEqual<int>(expected, result);
-        }
+        // Assert
+        Assert.AreEqual<int>(7, result);
     }
 
     [TestMethod]
-    public void TryCalculate_InvalidInput_ReturnsFalse()
+    public void Subtract_ReturnsCorrectDifference_Success()
+    {
+        // Arrange & Act
+        var result = Calculator.Subtract(10, 3);
+
+        // Assert
+        Assert.AreEqual<int>(7, result);
+    }
+
+    [TestMethod]
+    public void Multiple_ReturnsCorrectProduct_Success()
+    {
+        // Arrange & Act
+        var result = Calculator.Multiple(3, 4);
+
+        // Assert
+        Assert.AreEqual<int>(12, result);
+    }
+
+    [TestMethod]
+    public void Divide_ReturnsCorrectQuotient_Success()
+    {
+        // Arrange & Act
+        var result = Calculator.Divide(12, 3);
+
+        // Assert
+        Assert.AreEqual<int>(4, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_ValidAddition_ReturnsTrue()
     {
         // Arrange
         var calculator = new Calculator();
-        var invalidInputs = new[]
-        {
-            "3+4",      // No spaces
-            "a + b",    // Non-numeric
-            "3 + ",     // Missing operand
-            "3 $ 4"     // Invalid operator
-        };
 
-        // Act & Assert
-        foreach (var input in invalidInputs)
-        {
-            Assert.IsFalse(calculator.TryCalculate(input, out _));
-        }
+        // Act
+        var success = calculator.TryCalculate("3 + 4", out int result);
+
+        // Assert
+        Assert.IsTrue(success);
+        Assert.AreEqual<int>(7, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_ValidSubtraction_ReturnsTrue()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("10 - 3", out int result);
+
+        // Assert
+        Assert.IsTrue(success);
+        Assert.AreEqual<int>(7, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_ValidMultiplication_ReturnsTrue()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("3 * 4", out int result);
+
+        // Assert
+        Assert.IsTrue(success);
+        Assert.AreEqual<int>(12, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_ValidDivision_ReturnsTrue()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("12 / 3", out int result);
+
+        // Assert
+        Assert.IsTrue(success);
+        Assert.AreEqual<int>(4, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_NoSpaces_ReturnsFalse()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("3+4", out int result);
+
+        // Assert
+        Assert.IsFalse(success);
+        Assert.AreEqual<int>(0, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_NonNumericOperands_ReturnsFalse()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("a + b", out int result);
+
+        // Assert
+        Assert.IsFalse(success);
+        Assert.AreEqual<int>(0, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_MissingOperand_ReturnsFalse()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("3 + ", out int result);
+
+        // Assert
+        Assert.IsFalse(success);
+        Assert.AreEqual<int>(0, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_InvalidOperator_ReturnsFalse()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("3 $ 4", out int result);
+
+        // Assert
+        Assert.IsFalse(success);
+        Assert.AreEqual<int>(0, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_ExtraSpaces_ReturnsFalse()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("3  +  4", out int result);
+
+        // Assert
+        Assert.IsFalse(success);
+        Assert.AreEqual<int>(0, result);
+    }
+
+    [TestMethod]
+    public void TryCalculate_NegativeNumbers_ReturnsTrue()
+    {
+        // Arrange
+        var calculator = new Calculator();
+
+        // Act
+        var success = calculator.TryCalculate("-5 + 3", out int result);
+
+        // Assert
+        Assert.IsTrue(success);
+        Assert.AreEqual<int>(-2, result);
     }
 }
+
