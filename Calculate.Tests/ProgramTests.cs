@@ -88,7 +88,7 @@ public sealed class ProgramTests
         program.WriteLine("Third");
         
         // Assert
-        Assert.AreEqual<int>(3, outputs.Count);
+        Assert.HasCount(3, outputs);
         Assert.AreEqual<string>("First", outputs[0]);
         Assert.AreEqual<string>("Second", outputs[1]);
         Assert.AreEqual<string>("Third", outputs[2]);
@@ -111,8 +111,8 @@ public sealed class ProgramTests
 
         // Assert
         var output = writer.ToString();
-        Assert.IsTrue(output.Contains("Result: 8"));
-        Assert.IsTrue(output.Contains("Enter calculation"));
+        Assert.Contains("Result: 8", output);
+        Assert.Contains("Enter calculation", output);
     }
 
     [TestMethod]
@@ -132,7 +132,7 @@ public sealed class ProgramTests
 
         // Assert
         var output = writer.ToString();
-        Assert.IsTrue(output.Contains("Invalid calculation"));
+        Assert.Contains("Invalid calculation", output);
     }
 
     [TestMethod]
@@ -150,9 +150,9 @@ public sealed class ProgramTests
 
         // Assert
         var output = writer.ToString();
-        Assert.IsTrue(output.Contains("Enter calculation"));
+        Assert.Contains("Enter calculation", output);
         var lines = output.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        Assert.AreEqual<int>(1, lines.Length);
+        Assert.HasCount(1, lines);
     }
 
     [TestMethod]
@@ -170,9 +170,9 @@ public sealed class ProgramTests
 
         // Assert
         var output = writer.ToString();
-        Assert.IsTrue(output.Contains("Enter calculation"));
-        Assert.IsFalse(output.Contains("Result:"));
-        Assert.IsFalse(output.Contains("Invalid calculation"));
+        Assert.Contains("Enter calculation", output);
+        Assert.DoesNotContain("Result:", output);
+        Assert.DoesNotContain("Invalid calculation", output);
     }
 
     [TestMethod]
@@ -199,9 +199,9 @@ public sealed class ProgramTests
 
         // Assert
         var output = writer.ToString();
-        Assert.IsTrue(output.Contains("Result: 5"));
-        Assert.IsTrue(output.Contains("Result: 12"));
-        Assert.IsTrue(output.Contains("Invalid calculation"));
+        Assert.Contains("Result: 5", output);
+        Assert.Contains("Result: 12", output);
+        Assert.Contains("Invalid calculation", output);
     }
 
     [TestMethod]
@@ -227,9 +227,9 @@ public sealed class ProgramTests
 
         // Assert
         var output = writer.ToString();
-        Assert.IsTrue(output.Contains("Result: 2"));
-        Assert.IsTrue(output.Contains("Result: 10"));
-        Assert.IsTrue(output.Contains("Invalid calculation"));
+        Assert.Contains("Result: 2", output);
+        Assert.Contains("Result: 10", output);
+        Assert.Contains("Invalid calculation", output);
     }
 
     [TestMethod]
@@ -250,6 +250,6 @@ public sealed class ProgramTests
         // Assert
         var output = writer.ToString();
         // Should exit on first EXIT command
-        Assert.IsTrue(output.Contains("Enter calculation"));
+        Assert.Contains("Enter calculation", output);
     }
 }
