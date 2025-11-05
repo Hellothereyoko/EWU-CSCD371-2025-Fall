@@ -128,6 +128,5 @@ public sealed class ProgramTests
             }
 
         // Assert
-        Assert.ContainsSingle(output); // only the initial prompt should be printed
-        }
+        Assert.AreEqual<int>(1, output.Count);        }
     }

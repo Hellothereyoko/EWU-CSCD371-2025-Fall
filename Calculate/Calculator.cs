@@ -18,14 +18,21 @@ public class Calculator
 
     public bool TryCalculate(string calculation, out int result)
     {
+
         result = 0;
         var parts = calculation.Split(' ');
 
         if (parts.Length != 3 ||
+            parts[1].Length != 1 ||
             !int.TryParse(parts[0], out int left) ||
             !int.TryParse(parts[2], out int right) ||
-            parts[1].Length != 1 ||
             !MathematicalOperations.TryGetValue(parts[1][0], out var operation))
+        {
+            return false;
+        }
+
+        // prevent division by zero
+        if (parts[1][0] == '/' && right == 0)
         {
             return false;
         }
