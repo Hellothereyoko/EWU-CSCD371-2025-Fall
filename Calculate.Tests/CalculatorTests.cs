@@ -41,7 +41,7 @@ public sealed class CalculatorTests
     public void Multiple_ReturnsCorrectProduct_Success()
     {
         // Arrange & Act
-        var result = Calculator.Multiple(3, 4);
+        var result = Calculator.Multiply(3, 4);
 
         // Assert
         Assert.AreEqual<int>(12, result);
@@ -170,17 +170,17 @@ public sealed class CalculatorTests
     }
 
     [TestMethod]
-    public void TryCalculate_ExtraSpaces_ReturnsFalse()
+    public void TryCalculate_ExtraSpaces_ReturnsTrue()
     {
         // Arrange
         var calculator = new Calculator();
 
         // Act
-        var success = calculator.TryCalculate("3  +  4", out int result);
+        var success = calculator.TryCalculate("  3  +  4", out int result);
 
         // Assert
-        Assert.IsFalse(success);
-        Assert.AreEqual<int>(0, result);
+        Assert.IsTrue(success);
+        Assert.AreEqual<int>(7, result);
     }
 
     [TestMethod]

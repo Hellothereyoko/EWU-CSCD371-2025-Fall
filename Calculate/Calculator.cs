@@ -4,7 +4,7 @@ public class Calculator
 {
     public static int Add(int a, int b) => a + b;
     public static int Subtract(int a, int b) => a - b;
-    public static int Multiple(int a, int b) => a * b;
+    public static int Multiply(int a, int b) => a * b;
     public static int Divide(int a, int b) => a / b;
 
     public IReadOnlyDictionary<char, Func<int, int, int>> MathematicalOperations { get; } =
@@ -12,7 +12,7 @@ public class Calculator
         {
             ['+'] = Add,
             ['-'] = Subtract,
-            ['*'] = Multiple,
+            ['*'] = Multiply,
             ['/'] = Divide
         };
 
@@ -20,7 +20,7 @@ public class Calculator
     {
 
         result = 0;
-        var parts = calculation.Split(' ');
+        var parts = calculation.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         if (parts.Length != 3 ||
             parts[1].Length != 1 ||
