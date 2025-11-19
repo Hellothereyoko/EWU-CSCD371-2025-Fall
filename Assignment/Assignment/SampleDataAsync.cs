@@ -87,16 +87,4 @@ public class SampleDataAsync : IAsyncSampleData
         return distinctStates.Aggregate((current, next) => $"{current}, {next}");
     }
 
-    private static IPerson ParsePersonHelper(string row)
-    {
-        var parts = row.Split(',');
-
-        // FIXED: Address is 3rd argument, Email is 4th
-        return new Person(
-            parts[0], 
-            parts[1], 
-            new Address(parts[3], parts[4], parts[5], parts[6]),
-            parts[2]
-        );
-    }
 }

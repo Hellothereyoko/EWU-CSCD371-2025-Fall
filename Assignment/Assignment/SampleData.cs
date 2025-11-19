@@ -22,14 +22,29 @@ public class SampleData : ISampleData
         get { return File.ReadLines(_csvFilePath).Skip(1); }
     }
 
-    public IEnumerable<string> GetUniqueSortedListOfStatesGivenCsvRows()
+   public IEnumerable<string> GetUniqueSortedListOfStatesGivenCsvRows()
     {
         return CsvRows
-            .Select(ParseStateFromCsvRow)
+            // FIX: Call shared CsvParser method
+            .Select(CsvParser.ParseStateFromCsvRow)
             .Distinct()
             .OrderBy(state => state);
     }
 
+// ... (methods between)
+
+    public IEnumerable<IPerson> People
+    {
+        get
+        {
+            return CsvRows
+                // FIX: Call shared CsvParser method
+                .Select(CsvParser.ParsePersonFromCsvRow) 
+                .OrderBy(p => p.Address.State)
+                .ThenBy(p => p.Address.City)
+                .ThenBy(p => p.Address.Zip);
+        }
+    }
     public string GetAggregateSortedListOfStatesUsingCsvRows()
     {
         var states = GetUniqueSortedListOfStatesGivenCsvRows().ToArray();
@@ -68,29 +83,7 @@ public class SampleData : ISampleData
         return distinctStates.Aggregate((current, next) => $"{current}, {next}");
     }
 
-    private static string ParseStateFromCsvRow(string row)
-    {
-        var parts = row.Split(',');
-        return parts.Length > 5 ? parts[5].Trim() : string.Empty;
-    }
+    
 
-    private static IPerson ParsePersonFromCsvRow(string row)
-    {
-        var parts = row.Split(',');
-        
-        var address = new Address(
-            parts.Length > 3 ? parts[3].Trim() : "",
-            parts.Length > 4 ? parts[4].Trim() : "",
-            parts.Length > 5 ? parts[5].Trim() : "",
-            parts.Length > 6 ? parts[6].Trim() : ""
-        );
-
-        // FIXED: Passing Address as 3rd arg, Email as 4th arg
-        return new Person(
-            parts.Length > 0 ? parts[0].Trim() : "",
-            parts.Length > 1 ? parts[1].Trim() : "",
-            address,                                  
-            parts.Length > 2 ? parts[2].Trim() : ""   
-        );
-    }
+   
 }
