@@ -9,12 +9,12 @@ namespace Assignment.Tests;
 public class SampleDataTests
 {
     private const string TestFileName = "People.csv";
-    private SampleData _sampleData;
+    private SampleData _sampleData = null!;
 
-    [TestInitialize]
+    [TestInitialize] //Init the suite before tests run
     public void Setup()
     {
-        // Create dummy CSV
+        // Create dummy CSV object
         var lines = new[]
         {
             "FirstName,LastName,Email,Street,City,State,Zip",
@@ -22,11 +22,12 @@ public class SampleDataTests
             "Jane,Smith,jane@test.com,456 Oak,Portland,OR,97201",
             "Bob,Jones,bob@example.com,789 Pine,Spokane,WA,99201"
         };
+
         File.WriteAllLines(TestFileName, lines);
         _sampleData = new SampleData(TestFileName);
     }
 
-    [TestCleanup]
+    [TestCleanup] //Clean up your dirty mess when you're 
     public void Cleanup()
     {
         if (File.Exists(TestFileName)) File.Delete(TestFileName);
