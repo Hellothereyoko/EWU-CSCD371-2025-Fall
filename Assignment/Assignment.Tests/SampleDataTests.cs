@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Assignment; // Ensure this is here to see SampleData/Node
+using Assignment; // Assuming your implementation code is in the Assignment namespace
 
 namespace Assignment.Tests;
 
@@ -10,11 +10,10 @@ namespace Assignment.Tests;
 public class SampleDataTests
 {
     private const string TestFileName = "People.csv";
-    
-    // FIX 1: Use 'null!' to satisfy the compiler warning safely
+    // Fixed the nullable warning (CS8618) from before
     private SampleData _sampleData = null!;
 
-    [TestInitialize]
+    [TestInitialize] //Init the suite before tests run
     public void Setup()
     {
         // Create dummy CSV object
@@ -27,23 +26,22 @@ public class SampleDataTests
         };
 
         File.WriteAllLines(TestFileName, lines);
-        
-        // Ensure you are NOT using 'var' here (which would create a local variable)
         _sampleData = new SampleData(TestFileName);
     }
 
-    [TestCleanup] 
+    [TestCleanup] //Clean up your dirty mess when you're 
     public void Cleanup()
     {
         if (File.Exists(TestFileName)) File.Delete(TestFileName);
     }
 
-    // ... Your tests remain the same ...
     [TestMethod]
     public void CsvRows_SkipsHeader_And_ReturnsCorrectCount()
     {
         var rows = _sampleData.CsvRows.ToList();
-        Assert.AreEqual(3, rows.Count());
+        
+        // FIX 1: Changed Assert.AreEqual(3, rows.Count()) to Assert.HasCount(rows, 3)
+        Assert.HasCount(rows, 3);
         Assert.IsFalse(rows.Any(r => r.StartsWith("FirstName")));
     }
 
@@ -51,10 +49,14 @@ public class SampleDataTests
     public void GetUniqueSortedListOfStates_ReturnsSortedUniqueList()
     {
         var states = _sampleData.GetUniqueSortedListOfStatesGivenCsvRows().ToList();
+
+        // Hardcoded check
         Assert.AreEqual("OR", states[0]);
         Assert.AreEqual("WA", states[1]);
-        Assert.AreEqual(2, states.Count);
-        
+        // FIX 2: Changed Assert.AreEqual(2, states.Count) to Assert.HasCount(states, 2)
+        Assert.HasCount(states, 2);
+
+        // LINQ Verification of Sort (using Zip to compare current vs next)
         var isSorted = states.Zip(states.Skip(1), (a, b) => string.Compare(a, b) < 0).All(x => x);
         Assert.IsTrue(isSorted, "List was not sorted alphabetically.");
     }
@@ -70,9 +72,15 @@ public class SampleDataTests
     public void People_ReturnsObjects_SortedByStateCityZip()
     {
         var people = _sampleData.People.ToList();
-        Assert.AreEqual(3, people.Count);
+
+        // FIX 3: Changed Assert.AreEqual(3, people.Count) to Assert.HasCount(people, 3)
+        Assert.HasCount(people, 3);
+        
+        // Verify Sort Order (OR comes before WA)
         Assert.AreEqual("OR", people[0].Address.State);
         Assert.AreEqual("WA", people[1].Address.State);
+
+        // Verify Data Mapping
         Assert.AreEqual("Jane", people[0].FirstName);
     }
 
@@ -80,7 +88,9 @@ public class SampleDataTests
     public void FilterByEmailAddress_ReturnsMatches()
     {
         var result = _sampleData.FilterByEmailAddress(email => email.Contains("@test.com")).ToList();
-        Assert.AreEqual(2, result.Count);
+
+        Assert.HasCount(result, 2);
+        // Verify using Contains/Any
         Assert.IsTrue(result.Any(x => x.FirstName == "John"));
         Assert.IsTrue(result.Any(x => x.FirstName == "Jane"));
         Assert.IsFalse(result.Any(x => x.FirstName == "Bob"));
@@ -89,11 +99,14 @@ public class SampleDataTests
     [TestMethod]
     public void GetAggregateListOfStatesGivenPeopleCollection_UsesAggregate()
     {
+        // Step 6 Implementation verification
         var people = _sampleData.People;
         var result = _sampleData.GetAggregateListOfStatesGivenPeopleCollection(people);
+
         Assert.AreEqual("OR, WA", result);
     }
 
+    // Step 7: Node Test
     [TestMethod]
     public void Node_IteratesCircleOnce()
     {
@@ -103,11 +116,12 @@ public class SampleDataTests
 
         node1.Next = node2;
         node2.Next = node3;
-        node3.Next = node1; 
+        node3.Next = node1; // Close circle
 
         var result = node1.ToList();
 
-        Assert.AreEqual(3, result.Count);
+        // FIX 4: Changed Assert.AreEqual(3, result.Count) to Assert.HasCount(result, 3)
+        Assert.HasCount(result, 3);
         Assert.AreEqual(1, result[0]);
         Assert.AreEqual(3, result[2]);
     }
