@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq; // This now includes System.Linq.Async extension methods
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Assignment;
@@ -17,7 +17,8 @@ public class SampleDataAsync : IAsyncSampleData
 
     public IAsyncEnumerable<string> CsvRows => ReadLinesAsync(_csvFilePath);
 
-    private async IAsyncEnumerable<string> ReadLinesAsync(string path)
+    // FIX: CA1822 - Marked method as static
+    private static async IAsyncEnumerable<string> ReadLinesAsync(string path) 
     {
         using var reader = new StreamReader(path);
         await reader.ReadLineAsync(); // Skip header
@@ -35,7 +36,7 @@ public class SampleDataAsync : IAsyncSampleData
         
         await foreach (var row in CsvRows)
         {
-            // FIX: Use shared CsvParser instead of inline logic
+            // Calls shared CsvParser
             states.Add(CsvParser.ParseStateFromCsvRow(row)); 
         }
 
@@ -45,28 +46,23 @@ public class SampleDataAsync : IAsyncSampleData
         }
     }
 
-// ... (methods between)
+    public string GetAggregateSortedListOfStatesUsingCsvRows()
+    {
+        var states = GetUniqueSortedListOfStatesGivenCsvRows().ToEnumerable().ToList();
+        return string.Join(", ", states);
+    }
 
     public IAsyncEnumerable<IPerson> People
     {
         get
         {
             return CsvRows
-                // FIX: Call shared CsvParser method
-                .Select(CsvParser.ParsePersonFromCsvRow)
+                .Select(CsvParser.ParsePersonFromCsvRow) // Calls shared parser
                 .OrderBy(p => p.Address.State)
                 .ThenBy(p => p.Address.City)
                 .ThenBy(p => p.Address.Zip);
         }
     }
-
-    public string GetAggregateSortedListOfStatesUsingCsvRows()
-    {
-        // ToEnumerable() requires System.Linq.Async package
-        var states = GetUniqueSortedListOfStatesGivenCsvRows().ToEnumerable().ToList();
-        return string.Join(", ", states);
-    }
-
 
     public IAsyncEnumerable<(string FirstName, string LastName)> FilterByEmailAddress(Predicate<string> filter)
     {
@@ -83,8 +79,8 @@ public class SampleDataAsync : IAsyncSampleData
             .OrderBy(s => s)
             .ToList();
 
-        if (!distinctStates.Any()) return string.Empty;
+        // FIX: CA1860 - Prefer comparing 'Count' to 0
+        if (distinctStates.Count == 0) return string.Empty;
         return distinctStates.Aggregate((current, next) => $"{current}, {next}");
     }
-
 }

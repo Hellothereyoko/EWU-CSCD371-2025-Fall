@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Assignment;
 
+
 public class SampleData : ISampleData
 {
     private readonly string _csvFilePath;
@@ -14,13 +15,11 @@ public class SampleData : ISampleData
         _csvFilePath = csvFilePath;
     }
 
-    // 1. Implements CsvRows (skips header)
     public IEnumerable<string> CsvRows
     {
         get { return File.ReadLines(_csvFilePath).Skip(1); }
     }
 
-    // 2. Returns unique and sorted states using CsvParser
     public IEnumerable<string> GetUniqueSortedListOfStatesGivenCsvRows()
     {
         return CsvRows
@@ -29,14 +28,12 @@ public class SampleData : ISampleData
             .OrderBy(state => state);
     }
 
-    // 3. Aggregates unique and sorted states into a comma-separated string
     public string GetAggregateSortedListOfStatesUsingCsvRows()
     {
         var states = GetUniqueSortedListOfStatesGivenCsvRows().ToArray();
         return string.Join(", ", states);
     }
 
-    // 4. Returns Person objects sorted by State, City, and Zip using CsvParser
     public IEnumerable<IPerson> People
     {
         get
@@ -49,7 +46,6 @@ public class SampleData : ISampleData
         }
     }
 
-    // 5. Filters the People collection by email
     public IEnumerable<(string FirstName, string LastName)> FilterByEmailAddress(Predicate<string> filter)
     {
         return People
@@ -57,7 +53,6 @@ public class SampleData : ISampleData
             .Select(p => (p.FirstName, p.LastName));
     }
 
-    // 6. Aggregates the states from the provided people collection
     public string GetAggregateListOfStatesGivenPeopleCollection(IEnumerable<IPerson> people)
     {
         var distinctStates = people
@@ -66,7 +61,8 @@ public class SampleData : ISampleData
             .OrderBy(s => s)
             .ToList();
 
-        if (!distinctStates.Any()) return string.Empty;
+        // FIX: CA1860 - Prefer comparing 'Count' to 0
+        if (distinctStates.Count == 0) return string.Empty; 
 
         return distinctStates.Aggregate((current, next) => $"{current}, {next}");
     }
