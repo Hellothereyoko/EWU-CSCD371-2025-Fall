@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Assignment; // Assuming your implementation code is in the Assignment namespace
+using Assignment; // Ensure this is here to see SampleData/Node
 
 namespace Assignment.Tests;
 
@@ -10,7 +10,6 @@ namespace Assignment.Tests;
 public class SampleDataTests
 {
     private const string TestFileName = "People.csv";
-    // Fixed the nullable warning (CS8618) from before
     private SampleData _sampleData = null!;
 
     [TestInitialize] //Init the suite before tests run
@@ -40,7 +39,7 @@ public class SampleDataTests
     {
         var rows = _sampleData.CsvRows.ToList();
         
-        // FIX 1: Changed Assert.AreEqual(3, rows.Count()) to Assert.HasCount(rows, 3)
+        // FIX 1: Corrected order: Assert.HasCount(collection, expectedCount)
         Assert.HasCount(rows, 3);
         Assert.IsFalse(rows.Any(r => r.StartsWith("FirstName")));
     }
@@ -53,7 +52,8 @@ public class SampleDataTests
         // Hardcoded check
         Assert.AreEqual("OR", states[0]);
         Assert.AreEqual("WA", states[1]);
-        // FIX 2: Changed Assert.AreEqual(2, states.Count) to Assert.HasCount(states, 2)
+        
+        // FIX 2: Corrected order: Assert.HasCount(collection, expectedCount)
         Assert.HasCount(states, 2);
 
         // LINQ Verification of Sort (using Zip to compare current vs next)
@@ -73,7 +73,7 @@ public class SampleDataTests
     {
         var people = _sampleData.People.ToList();
 
-        // FIX 3: Changed Assert.AreEqual(3, people.Count) to Assert.HasCount(people, 3)
+        // FIX 3: Corrected order: Assert.HasCount(collection, expectedCount)
         Assert.HasCount(people, 3);
         
         // Verify Sort Order (OR comes before WA)
@@ -89,7 +89,9 @@ public class SampleDataTests
     {
         var result = _sampleData.FilterByEmailAddress(email => email.Contains("@test.com")).ToList();
 
+        // FIX 4: Corrected order: Assert.HasCount(collection, expectedCount)
         Assert.HasCount(result, 2);
+        
         // Verify using Contains/Any
         Assert.IsTrue(result.Any(x => x.FirstName == "John"));
         Assert.IsTrue(result.Any(x => x.FirstName == "Jane"));
@@ -120,7 +122,7 @@ public class SampleDataTests
 
         var result = node1.ToList();
 
-        // FIX 4: Changed Assert.AreEqual(3, result.Count) to Assert.HasCount(result, 3)
+        // FIX 5: Corrected order: Assert.HasCount(collection, expectedCount)
         Assert.HasCount(result, 3);
         Assert.AreEqual(1, result[0]);
         Assert.AreEqual(3, result[2]);
