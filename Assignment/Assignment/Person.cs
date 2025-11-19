@@ -1,18 +1,17 @@
-﻿namespace Assignment;
-
-public class Person : IPerson
+﻿public class Person : IPerson
 {
-    // Constructor updated to match IPerson property order usually expected
     public Person(string firstName, string lastName, IAddress address, string email)
     {
         FirstName = firstName;
         LastName = lastName;
-        Address = address;
         EmailAddress = email;
+        
+        // DID YOU FORGET THIS LINE?
+        Address = address; 
     }
 
     public string FirstName { get; }
     public string LastName { get; }
-    public IAddress Address { get; }
     public string EmailAddress { get; }
+    public IAddress Address { get; } // If this is null, your Sort function crashes.
 }
