@@ -1,4 +1,7 @@
-﻿public class Person : IPerson
+﻿
+namespace Assignment;
+
+public class Person : IPerson
 {
     public Person(string firstName, string lastName, IAddress address, string email)
     {
