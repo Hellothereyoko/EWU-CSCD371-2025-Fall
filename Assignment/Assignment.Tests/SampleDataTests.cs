@@ -39,8 +39,8 @@ public class SampleDataTests
     {
         var rows = _sampleData.CsvRows.ToList();
         
-        // FIX 1: Corrected order: Assert.HasCount(collection, expectedCount)
-        Assert.HasCount(rows, 3);
+        // FIX 1: Swapped arguments to (expectedCount, collection)
+        Assert.HasCount(3, rows);
         Assert.IsFalse(rows.Any(r => r.StartsWith("FirstName")));
     }
 
@@ -53,8 +53,8 @@ public class SampleDataTests
         Assert.AreEqual("OR", states[0]);
         Assert.AreEqual("WA", states[1]);
         
-        // FIX 2: Corrected order: Assert.HasCount(collection, expectedCount)
-        Assert.HasCount(states, 2);
+        // FIX 2: Swapped arguments to (expectedCount, collection)
+        Assert.HasCount(2, states);
 
         // LINQ Verification of Sort (using Zip to compare current vs next)
         var isSorted = states.Zip(states.Skip(1), (a, b) => string.Compare(a, b) < 0).All(x => x);
@@ -73,8 +73,8 @@ public class SampleDataTests
     {
         var people = _sampleData.People.ToList();
 
-        // FIX 3: Corrected order: Assert.HasCount(collection, expectedCount)
-        Assert.HasCount(people, 3);
+        // FIX 3: Swapped arguments to (expectedCount, collection)
+        Assert.HasCount(3, people);
         
         // Verify Sort Order (OR comes before WA)
         Assert.AreEqual("OR", people[0].Address.State);
@@ -89,8 +89,8 @@ public class SampleDataTests
     {
         var result = _sampleData.FilterByEmailAddress(email => email.Contains("@test.com")).ToList();
 
-        // FIX 4: Corrected order: Assert.HasCount(collection, expectedCount)
-        Assert.HasCount(result, 2);
+        // FIX 4: Swapped arguments to (expectedCount, collection)
+        Assert.HasCount(2, result);
         
         // Verify using Contains/Any
         Assert.IsTrue(result.Any(x => x.FirstName == "John"));
@@ -122,8 +122,8 @@ public class SampleDataTests
 
         var result = node1.ToList();
 
-        // FIX 5: Corrected order: Assert.HasCount(collection, expectedCount)
-        Assert.HasCount(result, 3);
+        // FIX 5: Swapped arguments to (expectedCount, collection)
+        Assert.HasCount(3, result);
         Assert.AreEqual(1, result[0]);
         Assert.AreEqual(3, result[2]);
     }
