@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace Assignment;
 
-
 public class SampleData : ISampleData
 {
     private readonly string _csvFilePath;
@@ -23,7 +22,7 @@ public class SampleData : ISampleData
     public IEnumerable<string> GetUniqueSortedListOfStatesGivenCsvRows()
     {
         return CsvRows
-            .Select(CsvParser.ParseStateFromCsvRow) // Calls shared parser
+            .Select(CsvParser.ParseStateFromCsvRow)
             .Distinct()
             .OrderBy(state => state);
     }
@@ -39,7 +38,7 @@ public class SampleData : ISampleData
         get
         {
             return CsvRows
-                .Select(CsvParser.ParsePersonFromCsvRow) // Calls shared parser
+                .Select(CsvParser.ParsePersonFromCsvRow)
                 .OrderBy(p => p.Address.State)
                 .ThenBy(p => p.Address.City)
                 .ThenBy(p => p.Address.Zip);

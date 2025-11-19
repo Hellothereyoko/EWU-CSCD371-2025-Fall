@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Linq; 
 using System.Threading.Tasks;
 
 namespace Assignment;
@@ -57,7 +57,7 @@ public class SampleDataAsync : IAsyncSampleData
         get
         {
             return CsvRows
-                .Select(CsvParser.ParsePersonFromCsvRow) // Calls shared parser
+                .Select(CsvParser.ParsePersonFromCsvRow)
                 .OrderBy(p => p.Address.State)
                 .ThenBy(p => p.Address.City)
                 .ThenBy(p => p.Address.Zip);
