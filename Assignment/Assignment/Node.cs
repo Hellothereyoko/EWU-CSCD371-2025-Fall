@@ -29,16 +29,17 @@ public class Node<T> : IEnumerable<T>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     // Returns remaining items with max count
-    public IEnumerable<T> ChildItems(int maximum)
+   public IEnumerable<T> ChildItems(int maximum)
+{
+    var current = Next;
+    int count = 0;
+    
+    // ADDED: current != this check to stop if it circles back before hitting maximum
+    while (current != null && current != this && count < maximum) 
     {
-        var current = Next;
-        int count = 0;
-        
-        while (current != null && count < maximum)
-        {
-            yield return current.Data;
-            current = current.Next;
-            count++;
-        }
+        yield return current.Data;
+        current = current.Next;
+        count++;
     }
+}
 }

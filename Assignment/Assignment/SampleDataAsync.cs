@@ -35,13 +35,28 @@ public class SampleDataAsync : IAsyncSampleData
         
         await foreach (var row in CsvRows)
         {
-            var parts = row.Split(',');
-            if (parts.Length > 5) states.Add(parts[5].Trim());
+            // FIX: Use shared CsvParser instead of inline logic
+            states.Add(CsvParser.ParseStateFromCsvRow(row)); 
         }
 
         foreach (var state in states.OrderBy(s => s))
         {
             yield return state;
+        }
+    }
+
+// ... (methods between)
+
+    public IAsyncEnumerable<IPerson> People
+    {
+        get
+        {
+            return CsvRows
+                // FIX: Call shared CsvParser method
+                .Select(CsvParser.ParsePersonFromCsvRow)
+                .OrderBy(p => p.Address.State)
+                .ThenBy(p => p.Address.City)
+                .ThenBy(p => p.Address.Zip);
         }
     }
 
@@ -52,17 +67,6 @@ public class SampleDataAsync : IAsyncSampleData
         return string.Join(", ", states);
     }
 
-    public IAsyncEnumerable<IPerson> People
-    {
-        get
-        {
-            return CsvRows
-                .Select(row => ParsePersonHelper(row))
-                .OrderBy(p => p.Address.State)
-                .ThenBy(p => p.Address.City)
-                .ThenBy(p => p.Address.Zip);
-        }
-    }
 
     public IAsyncEnumerable<(string FirstName, string LastName)> FilterByEmailAddress(Predicate<string> filter)
     {
@@ -86,7 +90,7 @@ public class SampleDataAsync : IAsyncSampleData
     private static IPerson ParsePersonHelper(string row)
     {
         var parts = row.Split(',');
-        
+
         // FIXED: Address is 3rd argument, Email is 4th
         return new Person(
             parts[0], 
