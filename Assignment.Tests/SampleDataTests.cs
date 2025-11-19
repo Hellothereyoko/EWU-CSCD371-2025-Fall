@@ -2,7 +2,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Assignment; // Ensure this is here to see SampleData/Node
+using System; // <-- ADDED: Needed for StringComparison
+using Assignment; 
 
 namespace Assignment.Tests;
 
@@ -41,7 +42,9 @@ public class SampleDataTests
         
         // FIX 1: Swapped arguments to (expectedCount, collection)
         Assert.HasCount(3, rows);
-        Assert.IsFalse(rows.Any(r => r.StartsWith("FirstName")));
+        
+        // FIX 2 (Line 44): Added StringComparison.Ordinal to resolve CA1310
+        Assert.IsFalse(rows.Any(r => r.StartsWith("FirstName", StringComparison.Ordinal)));
     }
 
     [TestMethod]
@@ -53,11 +56,12 @@ public class SampleDataTests
         Assert.AreEqual("OR", states[0]);
         Assert.AreEqual("WA", states[1]);
         
-        // FIX 2: Swapped arguments to (expectedCount, collection)
+        // FIX 3: Swapped arguments to (expectedCount, collection)
         Assert.HasCount(2, states);
 
         // LINQ Verification of Sort (using Zip to compare current vs next)
-        var isSorted = states.Zip(states.Skip(1), (a, b) => string.Compare(a, b) < 0).All(x => x);
+        // FIX 4 (Line 60): Added StringComparison.Ordinal to resolve CA1309/CA1310
+        var isSorted = states.Zip(states.Skip(1), (a, b) => string.Compare(a, b, StringComparison.Ordinal) < 0).All(x => x);
         Assert.IsTrue(isSorted, "List was not sorted alphabetically.");
     }
 
@@ -73,7 +77,7 @@ public class SampleDataTests
     {
         var people = _sampleData.People.ToList();
 
-        // FIX 3: Swapped arguments to (expectedCount, collection)
+        // FIX 5: Swapped arguments to (expectedCount, collection)
         Assert.HasCount(3, people);
         
         // Verify Sort Order (OR comes before WA)
@@ -89,7 +93,7 @@ public class SampleDataTests
     {
         var result = _sampleData.FilterByEmailAddress(email => email.Contains("@test.com")).ToList();
 
-        // FIX 4: Swapped arguments to (expectedCount, collection)
+        // FIX 6: Swapped arguments to (expectedCount, collection)
         Assert.HasCount(2, result);
         
         // Verify using Contains/Any
@@ -122,7 +126,7 @@ public class SampleDataTests
 
         var result = node1.ToList();
 
-        // FIX 5: Swapped arguments to (expectedCount, collection)
+        // FIX 7: Swapped arguments to (expectedCount, collection)
         Assert.HasCount(3, result);
         Assert.AreEqual(1, result[0]);
         Assert.AreEqual(3, result[2]);
