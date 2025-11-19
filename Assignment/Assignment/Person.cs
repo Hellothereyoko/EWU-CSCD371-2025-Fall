@@ -1,20 +1,18 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-namespace Assignment;
+﻿namespace Assignment;
 
 public class Person : IPerson
 {
-    public Person(string firstName, string lastName, IAddress address, string emailAddress)
+    // Constructor updated to match IPerson property order usually expected
+    public Person(string firstName, string lastName, IAddress address, string email)
     {
         FirstName = firstName;
         LastName = lastName;
         Address = address;
-        EmailAddress = emailAddress;
+        EmailAddress = email;
     }
 
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public IAddress Address { get;set; }
-    public string EmailAddress { get; set; }
+    public string FirstName { get; }
+    public string LastName { get; }
+    public IAddress Address { get; }
+    public string EmailAddress { get; }
 }
