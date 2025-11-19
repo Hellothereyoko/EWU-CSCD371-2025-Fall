@@ -10,7 +10,7 @@ public class Address : IAddress
         Zip = zip;
     }
     
-    // CHANGED 'set' TO 'init' for immutability
+    // FIX: Changed 'set' to 'init'
     public string StreetAddress { get; init; } 
     public string City { get; init; }
     public string State { get; init; }
