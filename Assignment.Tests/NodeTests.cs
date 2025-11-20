@@ -2,15 +2,17 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System; // <-- ADDED: Needed for StringComparison
+using System; // <-- ADDED: Needed for StringComparison (keeps my compiler happy)
 using Assignment; 
 
 namespace Assignment.Tests;
 
 
+//Is responsible for testing Node.cs
 [TestClass]
 public class NodeTests
 {
+    //Tests for GetEnumerator method
      [TestMethod]
     public void Node_IteratesCircleOnce()
     {
@@ -22,15 +24,16 @@ public class NodeTests
         node2.Next = node3;
         node3.Next = node1; // Close circle
 
-        var result = node1.ToList();
+        var result = node1.ToList(); //Append all items to a list
 
-        // FIX 7: Swapped arguments to (expectedCount, collection)
+        // FIX 7: Swapped arguments to (expectedCount, collection) BUGGED AF IN EARLIER VERSIONS
         Assert.HasCount(3, result);
         Assert.AreEqual(1, result[0]);
         Assert.AreEqual(3, result[2]);
     }
 
 
+    //Tests for ChildItems method
     [TestMethod]
     public void Node_HandlesSingleNodeCircle()
     {
