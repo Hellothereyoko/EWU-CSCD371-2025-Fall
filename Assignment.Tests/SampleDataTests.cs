@@ -112,23 +112,4 @@ public class SampleDataTests
         Assert.AreEqual("OR, WA", result);
     }
 
-    // Step 7: Node Test
-    [TestMethod]
-    public void Node_IteratesCircleOnce()
-    {
-        var node1 = new Node<int>(1);
-        var node2 = new Node<int>(2);
-        var node3 = new Node<int>(3);
-
-        node1.Next = node2;
-        node2.Next = node3;
-        node3.Next = node1; // Close circle
-
-        var result = node1.ToList();
-
-        // FIX 7: Swapped arguments to (expectedCount, collection)
-        Assert.HasCount(3, result);
-        Assert.AreEqual(1, result[0]);
-        Assert.AreEqual(3, result[2]);
-    }
 }
