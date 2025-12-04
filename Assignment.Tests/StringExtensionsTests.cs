@@ -105,7 +105,7 @@ public class StringExtensionsTests
         string? text = null;
         const string pattern = "*";
 #pragma warning disable CS8604 // Possible null reference argument.
-        Assert.IsFalse(text.IsLike(pattern));
+        Assert.IsFalse(condition: text.IsLike(pattern));
 #pragma warning restore CS8604 // Possible null reference argument.
     }
 
