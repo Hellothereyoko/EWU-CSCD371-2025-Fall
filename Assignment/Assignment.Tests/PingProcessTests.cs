@@ -71,13 +71,14 @@ namespace Assignment.Tests
         {
             // Arrange
             var cts = new CancellationTokenSource();
-            cts.Cancel(); // Cancel immediately
-
+            
             // Act & Assert
             AggregateException? caughtException = null;
             try
             {
                 Task<PingResult> task = _pingProcess.RunAsync("localhost", cts.Token);
+                cts.Cancel(); // Cancel after starting the task
+                Thread.Sleep(10); // Give it a moment to process cancellation
                 task.Wait();
                 Assert.Fail("Expected AggregateException to be thrown");
             }
@@ -97,13 +98,14 @@ namespace Assignment.Tests
         {
             // Arrange
             var cts = new CancellationTokenSource();
-            cts.Cancel(); // Cancel immediately
 
             // Act & Assert
             AggregateException? caughtException = null;
             try
             {
                 Task<PingResult> task = _pingProcess.RunAsync("localhost", cts.Token);
+                cts.Cancel(); // Cancel after starting the task
+                Thread.Sleep(10); // Give it a moment to process cancellation
                 task.Wait();
                 Assert.Fail("Expected AggregateException to be thrown");
             }
@@ -124,12 +126,14 @@ namespace Assignment.Tests
         {
             // Arrange
             var cts = new CancellationTokenSource();
-            cts.Cancel(); // Cancel immediately
 
             // Act & Assert
             try
             {
-                await _pingProcess.RunAsync("localhost", cts.Token);
+                Task<PingResult> task = _pingProcess.RunAsync("localhost", cts.Token);
+                cts.Cancel(); // Cancel after starting the task
+                await Task.Delay(10); // Give it a moment to process cancellation
+                await task;
                 Assert.Fail("Expected TaskCanceledException to be thrown");
             }
             catch (TaskCanceledException)
@@ -140,6 +144,7 @@ namespace Assignment.Tests
 
         // Task 4: Test parallel execution
         [TestMethod]
+        [Timeout(30000)] // 30 second timeout
         public async Task RunAsync_MultipleHosts_Success()
         {
             // Arrange
@@ -174,12 +179,14 @@ namespace Assignment.Tests
             // Arrange
             var cts = new CancellationTokenSource();
             string[] hosts = { "localhost", "localhost", "localhost" };
-            cts.Cancel();
 
             // Act & Assert
             try
             {
-                await _pingProcess.RunAsync(hosts, cts.Token);
+                Task<PingResult> task = _pingProcess.RunAsync(hosts, cts.Token);
+                cts.Cancel(); // Cancel after starting
+                await Task.Delay(10);
+                await task;
                 Assert.Fail("Expected TaskCanceledException to be thrown");
             }
             catch (TaskCanceledException)
@@ -190,6 +197,7 @@ namespace Assignment.Tests
 
         // Task 5: Test long running task
         [TestMethod]
+        [Timeout(30000)] // 30 second timeout
         public async Task RunLongRunningAsync_Success()
         {
             // Arrange
@@ -210,12 +218,14 @@ namespace Assignment.Tests
         {
             // Arrange
             var cts = new CancellationTokenSource();
-            cts.Cancel();
 
             // Act & Assert
             try
             {
-                await _pingProcess.RunLongRunningAsync("localhost", cts.Token);
+                Task<PingResult> task = _pingProcess.RunLongRunningAsync("localhost", cts.Token);
+                cts.Cancel(); // Cancel after starting
+                await Task.Delay(10);
+                await task;
                 Assert.Fail("Expected TaskCanceledException to be thrown");
             }
             catch (TaskCanceledException)
@@ -226,6 +236,7 @@ namespace Assignment.Tests
 
         // Extra Credit: Test IProgress
         [TestMethod]
+        [Timeout(30000)] // 30 second timeout
         public async Task RunAsync_WithProgress_ReportsProgress()
         {
             // Arrange
@@ -248,6 +259,7 @@ namespace Assignment.Tests
 
         // Additional test: Verify StdOutput completeness
         [TestMethod]
+        [Timeout(30000)] // 30 second timeout
         public async Task RunAsync_MultipleHosts_AllOutputCaptured()
         {
             // Arrange
