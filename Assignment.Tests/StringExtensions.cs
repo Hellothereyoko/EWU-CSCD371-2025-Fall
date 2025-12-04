@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace IntelliTect.TestTools;
 
@@ -13,7 +14,7 @@ public static class StringExtensions
     /// <param name="s">The string to match</param>
     /// <param name="pattern">The pattern to match it against.</param>
     /// <returns></returns>
-    public static bool IsMatchRegex(this string s, string pattern) =>
+    public static bool IsLikeRegEx(this string s, string pattern) =>
         new Regex(pattern, RegexOptions.IgnoreCase).IsMatch(s);
 
     /// <summary>
