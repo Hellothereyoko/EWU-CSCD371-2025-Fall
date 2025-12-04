@@ -66,13 +66,14 @@ public class PingProcess
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing a <see cref="PingResult"/>.</returns>
     /// <exception cref="TaskCanceledException">Thrown when the operation is cancelled.</exception>
-    public async Task<PingResult> RunAsync(
+    public Task<PingResult> RunAsync(
         string hostNameOrAddress, CancellationToken cancellationToken = default)
     {
-        cancellationToken.ThrowIfCancellationRequested();
-        
-        Task<PingResult> task = Task.Run(() => Run(hostNameOrAddress), cancellationToken);
-        return await task;
+        return Task.Run(() => 
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Run(hostNameOrAddress);
+        }, cancellationToken);
     }
 
     /// <summary>
@@ -106,23 +107,22 @@ public class PingProcess
         var stringBuilder = new StringBuilder();
         var lockObject = new object();
 
-        var tasks = hostNameOrAddresses.Select(async hostNameOrAddress =>
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            
-            var result = await RunAsync(hostNameOrAddress, cancellationToken);
-            
-            // Thread-safe append to stringBuilder
-            lock (lockObject)
+        var tasks = hostNameOrAddresses.Select(hostNameOrAddress =>
+            RunAsync(hostNameOrAddress, cancellationToken).ContinueWith(task =>
             {
-                if (result.StdOutput != null)
+                var result = task.Result;
+                
+                // Thread-safe append to stringBuilder
+                lock (lockObject)
                 {
-                    stringBuilder.Append(result.StdOutput);
+                    if (result.StdOutput != null)
+                    {
+                        stringBuilder.Append(result.StdOutput);
+                    }
                 }
-            }
-            
-            return result.ExitCode;
-        }).ToList();
+                
+                return result.ExitCode;
+            }, cancellationToken)).ToList();
 
         var exitCodes = await Task.WhenAll(tasks);
         int totalExitCode = exitCodes.Sum();
