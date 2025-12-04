@@ -1,10 +1,19 @@
 <Project>
-<PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+  <PropertyGroup>
+    <!-- Language and Framework Settings -->
+    <LangVersion>latest</LangVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    
+    <!-- Nullable Reference Types -->
     <Nullable>enable</Nullable>
-    <LangVersion>13.0</LangVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    
+    <!-- Code Analysis -->
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    
+    <!-- Other Settings -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>

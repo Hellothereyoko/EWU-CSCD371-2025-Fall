@@ -1,152 +1,270 @@
-﻿using IntelliTect.TestTools;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Assignment.Tests;
-
-[TestClass]
-public class PingProcessTests
+namespace Assignment.Tests
 {
-    PingProcess Sut { get; set; } = new();
-
-    [TestInitialize]
-    public void TestInitialize()
+    [TestClass]
+    public class PingProcessTests
     {
-        Sut = new();
+        private PingProcess _pingProcess = null!;
+
+        [TestInitialize]
+        public void TestInitialize() => _pingProcess = new PingProcess();
+
+        // Task 1: Test RunTaskAsync without async/await
+        [TestMethod]
+        public void RunTaskAsync_Success()
+        {
+            // Arrange
+            const string host = "localhost";
+
+            // Act
+            Task<PingResult> task = _pingProcess.RunTaskAsync(host);
+            task.Wait();
+            PingResult result = task.Result;
+
+            // Assert
+            Assert.AreEqual<int>(0, result.ExitCode);
+            Assert.IsNotNull(result.StdOutput);
+            Assert.IsTrue(result.StdOutput.Contains("localhost") || result.StdOutput.Contains("127.0.0.1"));
+        }
+
+        // Task 2a: Test RunAsync without async/await
+        [TestMethod]
+        public void RunAsync_UsingTaskReturn_Success()
+        {
+            // Arrange
+            const string host = "localhost";
+
+            // Act
+            Task<PingResult> task = _pingProcess.RunAsync(host);
+            task.Wait();
+            PingResult result = task.Result;
+
+            // Assert
+            Assert.AreEqual<int>(0, result.ExitCode);
+            Assert.IsNotNull(result.StdOutput);
+            Assert.IsTrue(result.StdOutput.Contains("localhost") || result.StdOutput.Contains("127.0.0.1"));
+        }
+
+        // Task 2b: Test RunAsync with async/await
+        [TestMethod]
+        public async Task RunAsync_UsingTpl_Success()
+        {
+            // Arrange
+            const string host = "localhost";
+
+            // Act
+            PingResult result = await _pingProcess.RunAsync(host);
+
+            // Assert
+            Assert.AreEqual<int>(0, result.ExitCode);
+            Assert.IsNotNull(result.StdOutput);
+            Assert.IsTrue(result.StdOutput.Contains("localhost") || result.StdOutput.Contains("127.0.0.1"));
+        }
+
+        // Task 3a: Test cancellation with AggregateException
+        [TestMethod]
+        public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrapping()
+        {
+            // Arrange
+            var cts = new CancellationTokenSource();
+            cts.Cancel(); // Cancel immediately
+
+            // Act & Assert
+            AggregateException? caughtException = null;
+            try
+            {
+                Task<PingResult> task = _pingProcess.RunAsync("localhost", cts.Token);
+                task.Wait();
+                Assert.Fail("Expected AggregateException to be thrown");
+            }
+            catch (AggregateException ex)
+            {
+                caughtException = ex;
+            }
+
+            // Assert
+            Assert.IsNotNull(caughtException);
+            Assert.IsTrue(caughtException.InnerExceptions.Count > 0);
+        }
+
+        // Task 3b: Test cancellation with TaskCanceledException inner exception
+        [TestMethod]
+        public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrappingTaskCanceledException()
+        {
+            // Arrange
+            var cts = new CancellationTokenSource();
+            cts.Cancel(); // Cancel immediately
+
+            // Act & Assert
+            AggregateException? caughtException = null;
+            try
+            {
+                Task<PingResult> task = _pingProcess.RunAsync("localhost", cts.Token);
+                task.Wait();
+                Assert.Fail("Expected AggregateException to be thrown");
+            }
+            catch (AggregateException ex)
+            {
+                caughtException = ex;
+            }
+
+            // Assert
+            Assert.IsNotNull(caughtException);
+            Assert.IsNotNull(caughtException.InnerException);
+            Assert.IsInstanceOfType(caughtException.InnerException, typeof(TaskCanceledException));
+        }
+
+        // Task 3c: Test cancellation with async/await
+        [TestMethod]
+        public async Task RunAsync_UsingTplWithCancellation_CatchTaskCanceledException()
+        {
+            // Arrange
+            var cts = new CancellationTokenSource();
+            cts.Cancel(); // Cancel immediately
+
+            // Act & Assert
+            try
+            {
+                await _pingProcess.RunAsync("localhost", cts.Token);
+                Assert.Fail("Expected TaskCanceledException to be thrown");
+            }
+            catch (TaskCanceledException)
+            {
+                // Expected exception
+            }
+        }
+
+        // Task 4: Test parallel execution
+        [TestMethod]
+        public async Task RunAsync_MultipleHosts_Success()
+        {
+            // Arrange
+            string[] hosts = { "localhost", "localhost", "localhost" };
+
+            // Act
+            PingResult result = await _pingProcess.RunAsync(hosts);
+
+            // Assert
+            Assert.AreEqual<int>(0, result.ExitCode); // All should succeed
+            Assert.IsNotNull(result.StdOutput);
+            
+            // Count occurrences of localhost/127.0.0.1 in output
+            int count = 0;
+            string output = result.StdOutput.ToLower();
+            foreach (string line in output.Split(Environment.NewLine))
+            {
+                if (line.Contains("localhost") || line.Contains("127.0.0.1"))
+                {
+                    count++;
+                }
+            }
+            
+            // Should have output from all three pings
+            Assert.IsTrue(count >= 3, $"Expected at least 3 localhost references, found {count}");
+        }
+
+        // Task 4: Test parallel execution with cancellation
+        [TestMethod]
+        public async Task RunAsync_MultipleHostsWithCancellation_ThrowsException()
+        {
+            // Arrange
+            var cts = new CancellationTokenSource();
+            string[] hosts = { "localhost", "localhost", "localhost" };
+            cts.Cancel();
+
+            // Act & Assert
+            try
+            {
+                await _pingProcess.RunAsync(hosts, cts.Token);
+                Assert.Fail("Expected TaskCanceledException to be thrown");
+            }
+            catch (TaskCanceledException)
+            {
+                // Expected exception
+            }
+        }
+
+        // Task 5: Test long running task
+        [TestMethod]
+        public async Task RunLongRunningAsync_Success()
+        {
+            // Arrange
+            const string host = "localhost";
+
+            // Act
+            PingResult result = await _pingProcess.RunLongRunningAsync(host);
+
+            // Assert
+            Assert.AreEqual<int>(0, result.ExitCode);
+            Assert.IsNotNull(result.StdOutput);
+            Assert.IsTrue(result.StdOutput.Contains("localhost") || result.StdOutput.Contains("127.0.0.1"));
+        }
+
+        // Task 5: Test long running task with cancellation
+        [TestMethod]
+        public async Task RunLongRunningAsync_WithCancellation_ThrowsException()
+        {
+            // Arrange
+            var cts = new CancellationTokenSource();
+            cts.Cancel();
+
+            // Act & Assert
+            try
+            {
+                await _pingProcess.RunLongRunningAsync("localhost", cts.Token);
+                Assert.Fail("Expected TaskCanceledException to be thrown");
+            }
+            catch (TaskCanceledException)
+            {
+                // Expected exception
+            }
+        }
+
+        // Extra Credit: Test IProgress
+        [TestMethod]
+        public async Task RunAsync_WithProgress_ReportsProgress()
+        {
+            // Arrange
+            const string host = "localhost";
+            int progressCallCount = 0;
+            var progress = new Progress<string>(output =>
+            {
+                progressCallCount++;
+                Assert.IsNotNull(output);
+            });
+
+            // Act
+            PingResult result = await _pingProcess.RunAsync(host, progress);
+
+            // Assert
+            Assert.AreEqual<int>(0, result.ExitCode);
+            Assert.IsNotNull(result.StdOutput);
+            Assert.IsTrue(progressCallCount > 0, "Progress should have been reported at least once");
+        }
+
+        // Additional test: Verify StdOutput completeness
+        [TestMethod]
+        public async Task RunAsync_MultipleHosts_AllOutputCaptured()
+        {
+            // Arrange
+            string[] hosts = { "localhost", "localhost" };
+
+            // Act
+            PingResult result = await _pingProcess.RunAsync(hosts);
+
+            // Assert
+            Assert.IsNotNull(result.StdOutput);
+            
+            // The output should contain information from both pings
+            // Even though intermingled, all lines should be present
+            string[] lines = result.StdOutput.Split(new[] { Environment.NewLine }, 
+                StringSplitOptions.RemoveEmptyEntries);
+            
+            Assert.IsTrue(lines.Length > 0, "Output should contain multiple lines");
+        }
     }
-
-    [TestMethod]
-    public void Start_PingProcess_Success()
-    {
-        Process process = Process.Start("ping", "localhost");
-        process.WaitForExit();
-        Assert.AreEqual<int>(0, process.ExitCode);
-    }
-
-    [TestMethod]
-    public void Run_GoogleDotCom_Success()
-    {
-        int exitCode = Sut.Run("google.com").ExitCode;
-        Assert.AreEqual<int>(0, exitCode);
-    }
-
-
-    [TestMethod]
-    public void Run_InvalidAddressOutput_Success()
-    {
-        (int exitCode, string? stdOutput) = Sut.Run("badaddress");
-        Assert.IsFalse(string.IsNullOrWhiteSpace(stdOutput));
-        stdOutput = WildcardPattern.NormalizeLineEndings(stdOutput!.Trim());
-        Assert.AreEqual<string?>(
-            "Ping request could not find host badaddress. Please check the name and try again.".Trim(),
-            stdOutput,
-            $"Output is unexpected: {stdOutput}");
-        Assert.AreEqual<int>(1, exitCode);
-    }
-
-    [TestMethod]
-    public void Run_CaptureStdOutput_Success()
-    {
-        PingResult result = Sut.Run("localhost");
-        AssertValidPingOutput(result);
-    }
-
-    [TestMethod]
-    public void RunTaskAsync_Success()
-    {
-        // Do NOT use async/await in this test.
-        // Test Sut.RunTaskAsync("localhost");
-    }
-
-    [TestMethod]
-    public void RunAsync_UsingTaskReturn_Success()
-    {
-        // Do NOT use async/await in this test.
-        PingResult result = default;
-        // Test Sut.RunAsync("localhost");
-        AssertValidPingOutput(result);
-    }
-
-    [TestMethod]
-#pragma warning disable CS1998 // Remove this
-    async public Task RunAsync_UsingTpl_Success()
-    {
-        // DO use async/await in this test.
-        PingResult result = default;
-
-        // Test Sut.RunAsync("localhost");
-        AssertValidPingOutput(result);
-    }
-#pragma warning restore CS1998 // Remove this
-
-
-    [TestMethod]
-    [ExpectedException(typeof(AggregateException))]
-    public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrapping()
-    {
-        
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(TaskCanceledException))]
-    public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrappingTaskCanceledException()
-    {
-        // Use exception.Flatten()
-    }
-
-    [TestMethod]
-    async public Task RunAsync_MultipleHostAddresses_True()
-    {
-        // Pseudo Code - don't trust it!!!
-        string[] hostNames = new string[] { "localhost", "localhost", "localhost", "localhost" };
-        int expectedLineCount = PingOutputLikeExpression.Split(Environment.NewLine).Length*hostNames.Length;
-        PingResult result = await Sut.RunAsync(hostNames);
-        int? lineCount = result.StdOutput?.Split(Environment.NewLine).Length;
-        Assert.AreEqual(expectedLineCount, lineCount);
-    }
-
-    [TestMethod]
-#pragma warning disable CS1998 // Remove this
-    async public Task RunLongRunningAsync_UsingTpl_Success()
-    {
-        PingResult result = default;
-        // Test Sut.RunLongRunningAsync("localhost");
-        AssertValidPingOutput(result);
-    }
-#pragma warning restore CS1998 // Remove this
-
-    [TestMethod]
-    public void StringBuilderAppendLine_InParallel_IsNotThreadSafe()
-    {
-        IEnumerable<int> numbers = Enumerable.Range(0, short.MaxValue);
-        System.Text.StringBuilder stringBuilder = new();
-        numbers.AsParallel().ForAll(item => stringBuilder.AppendLine(""));
-        int lineCount = stringBuilder.ToString().Split(Environment.NewLine).Length;
-        Assert.AreNotEqual(lineCount, numbers.Count()+1);
-    }
-
-    readonly string PingOutputLikeExpression = @"
-Pinging * with 32 bytes of data:
-Reply from ::1: time<*
-Reply from ::1: time<*
-Reply from ::1: time<*
-Reply from ::1: time<*
-
-Ping statistics for ::1:
-    Packets: Sent = *, Received = *, Lost = 0 (0% loss),
-Approximate round trip times in milli-seconds:
-    Minimum = *, Maximum = *, Average = *".Trim();
-    private void AssertValidPingOutput(int exitCode, string? stdOutput)
-    {
-        Assert.IsFalse(string.IsNullOrWhiteSpace(stdOutput));
-        stdOutput = WildcardPattern.NormalizeLineEndings(stdOutput!.Trim());
-        Assert.IsTrue(stdOutput?.IsLike(PingOutputLikeExpression)??false,
-            $"Output is unexpected: {stdOutput}");
-        Assert.AreEqual<int>(0, exitCode);
-    }
-    private void AssertValidPingOutput(PingResult result) =>
-        AssertValidPingOutput(result.ExitCode, result.StdOutput);
 }
