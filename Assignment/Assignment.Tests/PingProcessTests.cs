@@ -257,7 +257,7 @@ namespace Assignment.Tests
             });
 
             // Act
-            PingResult result = await _pingProcess.RunAsync(host, progress);
+            PingResult result = await _pingProcess.RunAsync(host, progress, CancellationToken.None);
 
             // Assert
             Assert.AreEqual<int>(0, result.ExitCode);
