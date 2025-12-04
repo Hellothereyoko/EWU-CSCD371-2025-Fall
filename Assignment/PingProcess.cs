@@ -50,6 +50,16 @@ public class PingProcess
     }
 
     /// <summary>
+    /// Executes an asynchronous ping operation without cancellation support.
+    /// </summary>
+    /// <param name="hostNameOrAddress">The hostname or IP address to ping.</param>
+    /// <returns>A task that represents the asynchronous operation, containing a <see cref="PingResult"/>.</returns>
+    public Task<PingResult> RunAsync(string hostNameOrAddress)
+    {
+        return RunAsync(hostNameOrAddress, CancellationToken.None);
+    }
+
+    /// <summary>
     /// Executes an asynchronous ping operation with cancellation support.
     /// </summary>
     /// <param name="hostNameOrAddress">The hostname or IP address to ping.</param>

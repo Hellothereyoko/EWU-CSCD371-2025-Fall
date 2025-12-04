@@ -21,7 +21,8 @@ public static class StringExtensions
     /// </summary>
     public static bool IsLike(this string text, string pattern)
     {
-        ArgumentNullException.ThrowIfNull(text);
+        if (text == null)
+            return false;
         ArgumentNullException.ThrowIfNull(pattern);
 
         return new WildcardPattern(pattern).IsMatch(text);
@@ -32,7 +33,8 @@ public static class StringExtensions
     /// </summary>
     public static bool IsLike(this string text, string pattern, char escapeCharacter)
     {
-        ArgumentNullException.ThrowIfNull(text);
+        if (text == null)
+            return false;
         ArgumentNullException.ThrowIfNull(pattern);
 
         return new WildcardPattern(pattern, escapeCharacter).IsMatch(text);
