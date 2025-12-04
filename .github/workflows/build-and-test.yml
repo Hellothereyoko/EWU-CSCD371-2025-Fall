@@ -6,9 +6,7 @@ on:
 jobs:
   build-and-test:
     name: Run Shared Build and Test Workflow
-    # Add working-directory here to ensure the job starts at the repository root
-    runs-on: ubuntu-latest # You might need to add this line if it's not inherited
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build and Test
-        run: dotnet build && dotnet test
+    uses: IntelliTect-Samples/EWU-CSCD371-2025-Fall/.github/workflows/build-and-test.yml@main
+    with:
+      check-formatting: false
+      add-analyzers: false
