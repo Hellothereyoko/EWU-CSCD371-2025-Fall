@@ -14,7 +14,7 @@ public class StringExtensionsTests
     {
         const string text = "HelloWorld";
         const string pattern = "hello(.*)";
-        Assert.IsTrue(text.IsMatchRegEx(pattern), "Should match case-insensitively.");
+        Assert.IsTrue(text.IsMatchRegex(pattern), "Should match case-insensitively.");
     }
 
     [TestMethod]
@@ -22,7 +22,7 @@ public class StringExtensionsTests
     {
         const string text = "ExactMatch";
         const string pattern = "^ExactMatch$";
-        Assert.IsTrue(text.IsMatchRegEx(pattern), "Should match the exact string.");
+        Assert.IsTrue(text.IsMatchRegex(pattern), "Should match the exact string.");
     }
 
     [TestMethod]
@@ -30,7 +30,7 @@ public class StringExtensionsTests
     {
         const string text = "HelloWorld";
         const string pattern = "Goodbye";
-        Assert.IsFalse(text.IsMatchRegEx(pattern), "Should not find a match.");
+        Assert.IsFalse(text.IsMatchRegex(pattern), "Should not find a match.");
     }
 
     [TestMethod]
@@ -41,7 +41,7 @@ public class StringExtensionsTests
         const string pattern = ".*";
         // Regex.IsMatch on a null string throws an ArgumentNullException
 #pragma warning disable CS8604 // Possible null reference argument.
-        _ = text.IsMatchRegEx(pattern);
+        _ = text.IsMatchRegex(pattern);
 #pragma warning restore CS8604 // Possible null reference argument.
     }
 
@@ -53,7 +53,7 @@ public class StringExtensionsTests
         string? pattern = null;
         // The Regex constructor on a null pattern throws an ArgumentNullException
 #pragma warning disable CS8604 // Possible null reference argument.
-        _ = text.IsMatchRegEx(pattern);
+        _ = text.IsMatchRegex(pattern);
 #pragma warning restore CS8604 // Possible null reference argument.
     }
 
