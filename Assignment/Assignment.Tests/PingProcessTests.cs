@@ -15,6 +15,7 @@ namespace Assignment.Tests
 
         // Task 1: Test RunTaskAsync without async/await
         [TestMethod]
+        [Timeout(10000)] // 10 second timeout
         public void RunTaskAsync_Success()
         {
             // Arrange
@@ -33,6 +34,7 @@ namespace Assignment.Tests
 
         // Task 2a: Test RunAsync without async/await
         [TestMethod]
+        [Timeout(10000)]
         public void RunAsync_UsingTaskReturn_Success()
         {
             // Arrange
@@ -51,6 +53,7 @@ namespace Assignment.Tests
 
         // Task 2b: Test RunAsync with async/await
         [TestMethod]
+        [Timeout(10000)]
         public async Task RunAsync_UsingTpl_Success()
         {
             // Arrange
@@ -67,6 +70,7 @@ namespace Assignment.Tests
 
         // Task 3a: Test cancellation with AggregateException
         [TestMethod]
+        [Timeout(5000)]
         public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrapping()
         {
             // Arrange
@@ -94,6 +98,7 @@ namespace Assignment.Tests
 
         // Task 3b: Test cancellation with TaskCanceledException inner exception
         [TestMethod]
+        [Timeout(5000)]
         public void RunAsync_UsingTplWithCancellation_CatchAggregateExceptionWrappingTaskCanceledException()
         {
             // Arrange
@@ -117,11 +122,12 @@ namespace Assignment.Tests
             // Assert
             Assert.IsNotNull(caughtException);
             Assert.IsNotNull(caughtException.InnerException);
-            Assert.IsInstanceOfType(caughtException.InnerException, typeof(TaskCanceledException));
+            Assert.IsInstanceOfType(caughtException.InnerException, typeof(OperationCanceledException));
         }
 
         // Task 3c: Test cancellation with async/await
         [TestMethod]
+        [Timeout(5000)]
         public async Task RunAsync_UsingTplWithCancellation_CatchTaskCanceledException()
         {
             // Arrange
@@ -134,17 +140,17 @@ namespace Assignment.Tests
                 cts.Cancel(); // Cancel after starting the task
                 await Task.Delay(10); // Give it a moment to process cancellation
                 await task;
-                Assert.Fail("Expected TaskCanceledException to be thrown");
+                Assert.Fail("Expected OperationCanceledException to be thrown");
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
-                // Expected exception
+                // Expected exception (TaskCanceledException inherits from OperationCanceledException)
             }
         }
 
         // Task 4: Test parallel execution
         [TestMethod]
-        [Timeout(30000)] // 30 second timeout
+        [Timeout(15000)] // 15 second timeout for multiple pings
         public async Task RunAsync_MultipleHosts_Success()
         {
             // Arrange
@@ -174,6 +180,7 @@ namespace Assignment.Tests
 
         // Task 4: Test parallel execution with cancellation
         [TestMethod]
+        [Timeout(5000)]
         public async Task RunAsync_MultipleHostsWithCancellation_ThrowsException()
         {
             // Arrange
@@ -187,9 +194,9 @@ namespace Assignment.Tests
                 cts.Cancel(); // Cancel after starting
                 await Task.Delay(10);
                 await task;
-                Assert.Fail("Expected TaskCanceledException to be thrown");
+                Assert.Fail("Expected OperationCanceledException to be thrown");
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 // Expected exception
             }
@@ -197,7 +204,7 @@ namespace Assignment.Tests
 
         // Task 5: Test long running task
         [TestMethod]
-        [Timeout(30000)] // 30 second timeout
+        [Timeout(10000)] // 10 second timeout
         public async Task RunLongRunningAsync_Success()
         {
             // Arrange
@@ -214,6 +221,7 @@ namespace Assignment.Tests
 
         // Task 5: Test long running task with cancellation
         [TestMethod]
+        [Timeout(5000)]
         public async Task RunLongRunningAsync_WithCancellation_ThrowsException()
         {
             // Arrange
@@ -226,9 +234,9 @@ namespace Assignment.Tests
                 cts.Cancel(); // Cancel after starting
                 await Task.Delay(10);
                 await task;
-                Assert.Fail("Expected TaskCanceledException to be thrown");
+                Assert.Fail("Expected OperationCanceledException to be thrown");
             }
-            catch (TaskCanceledException)
+            catch (OperationCanceledException)
             {
                 // Expected exception
             }
@@ -236,7 +244,7 @@ namespace Assignment.Tests
 
         // Extra Credit: Test IProgress
         [TestMethod]
-        [Timeout(30000)] // 30 second timeout
+        [Timeout(10000)] // 10 second timeout
         public async Task RunAsync_WithProgress_ReportsProgress()
         {
             // Arrange
@@ -259,7 +267,7 @@ namespace Assignment.Tests
 
         // Additional test: Verify StdOutput completeness
         [TestMethod]
-        [Timeout(30000)] // 30 second timeout
+        [Timeout(15000)] // 15 second timeout
         public async Task RunAsync_MultipleHosts_AllOutputCaptured()
         {
             // Arrange

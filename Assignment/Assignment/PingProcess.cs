@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ public class PingProcess
     /// <returns>A <see cref="PingResult"/> containing the exit code and output.</returns>
     public PingResult Run(string hostNameOrAddress)
     {
-        StartInfo.Arguments = hostNameOrAddress;
+        StartInfo.Arguments = GetPingArguments(hostNameOrAddress);
         StringBuilder? stringBuilder = null;
         void updateStdOutput(string? line) =>
             (stringBuilder??=new StringBuilder()).AppendLine(line);
@@ -142,7 +143,7 @@ public class PingProcess
             },
             cancellationToken,
             TaskCreationOptions.LongRunning,
-            TaskScheduler.Current);
+            TaskScheduler.Default);
     }
 
     /// <summary>
@@ -164,7 +165,11 @@ public class PingProcess
     {
         cancellationToken.ThrowIfCancellationRequested();
         
-        StartInfo.Arguments = hostNameOrAddress;
+        var startInfo = new ProcessStartInfo("ping")
+        {
+            Arguments = GetPingArguments(hostNameOrAddress)
+        };
+        
         StringBuilder? stringBuilder = null;
         
         void updateStdOutput(string? line)
@@ -177,13 +182,30 @@ public class PingProcess
         }
 
         var task = Task.Factory.StartNew(
-            () => RunProcessInternal(StartInfo, updateStdOutput, default, cancellationToken),
+            () => RunProcessInternal(startInfo, updateStdOutput, default, cancellationToken),
             cancellationToken,
             TaskCreationOptions.LongRunning,
-            TaskScheduler.Current);
+            TaskScheduler.Default);
         
         var process = await task;
         return new PingResult(process.ExitCode, stringBuilder?.ToString());
+    }
+
+    /// <summary>
+    /// Gets platform-specific ping arguments with a limited count.
+    /// </summary>
+    private static string GetPingArguments(string hostNameOrAddress)
+    {
+        // Limit ping count to 2 for faster tests
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return $"-n 2 {hostNameOrAddress}";
+        }
+        else
+        {
+            // macOS and Linux use -c for count
+            return $"-c 2 {hostNameOrAddress}";
+        }
     }
 
     private Process RunProcessInternal(
