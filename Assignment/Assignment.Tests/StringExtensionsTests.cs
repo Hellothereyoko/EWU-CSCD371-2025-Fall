@@ -37,10 +37,12 @@ namespace IntelliTect.TestTools.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public void IsLikeRegEx_NullString_ThrowsException()
         {
-            string text = null;
+            string? text = null;
             const string pattern = ".*";
             // Regex.IsMatch on a null string throws an ArgumentNullException
-            text.IsLikeRegEx(pattern);
+#pragma warning disable CS8604 // Possible null reference argument.
+            _ = text.IsLikeRegEx(pattern);
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         [TestMethod]
@@ -48,9 +50,11 @@ namespace IntelliTect.TestTools.Tests
         public void IsLikeRegEx_NullPattern_ThrowsException()
         {
             const string text = "Test";
-            string pattern = null;
+            string? pattern = null;
             // The Regex constructor on a null pattern throws an ArgumentNullException
-            text.IsLikeRegEx(pattern);
+#pragma warning disable CS8604 // Possible null reference argument.
+            _ = text.IsLikeRegEx(pattern);
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         // --- Tests for IsLike(this string text, string pattern) (No escape character) ---
@@ -98,9 +102,11 @@ namespace IntelliTect.TestTools.Tests
         [TestMethod]
         public void IsLike_NullText_ReturnsFalse()
         {
-            string text = null;
+            string? text = null;
             const string pattern = "*";
+#pragma warning disable CS8604 // Possible null reference argument.
             Assert.IsFalse(text.IsLike(pattern));
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
 
@@ -109,9 +115,11 @@ namespace IntelliTect.TestTools.Tests
         public void IsLike_NullPattern_ThrowsException()
         {
             const string text = "Test";
-            string pattern = null;
+            string? pattern = null;
             // The WildcardPattern constructor should throw on a null pattern
-            text.IsLike(pattern);
+#pragma warning disable CS8604 // Possible null reference argument.
+            _ = text.IsLike(pattern);
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         // --- Tests for IsLike(this string text, string pattern, char escapeCharacter) (With escape character) ---
