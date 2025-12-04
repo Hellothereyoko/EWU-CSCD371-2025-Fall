@@ -14,15 +14,15 @@ namespace IntelliTect.TestTools.Tests
         {
             const string text = "HelloWorld";
             const string pattern = "hello(.*)";
-            Assert.IsTrue(text.IsLikeRegEx(pattern), "Should match case-insensitively.");
+            Assert.IsTrue(text.IsMatchRegEx(pattern), "Should match case-insensitively.");
         }
 
         [TestMethod]
-        public void IsLikeRegEx_FullMatch_ReturnsTrue()
+        public void IsMatchRegEx_FullMatch_ReturnsTrue()
         {
             const string text = "ExactMatch";
             const string pattern = "^ExactMatch$";
-            Assert.IsTrue(text.IsLikeRegEx(pattern), "Should match the exact string.");
+            Assert.IsTrue(text.IsMatchRegEx(pattern), "Should match the exact string.");
         }
 
         [TestMethod]
@@ -30,18 +30,18 @@ namespace IntelliTect.TestTools.Tests
         {
             const string text = "HelloWorld";
             const string pattern = "Goodbye";
-            Assert.IsFalse(text.IsLikeRegEx(pattern), "Should not find a match.");
+            Assert.IsFalse(text.IsMatchRegEx(pattern), "Should not find a match.");
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void IsLikeRegEx_NullString_ThrowsException()
+        public void IsMatchRegEx_NullString_ThrowsException()
         {
             string? text = null;
             const string pattern = ".*";
             // Regex.IsMatch on a null string throws an ArgumentNullException
 #pragma warning disable CS8604 // Possible null reference argument.
-            _ = text.IsLikeRegEx(pattern);
+            _ = text.IsMatchRegEx(pattern);
 #pragma warning restore CS8604 // Possible null reference argument.
         }
 
@@ -53,7 +53,7 @@ namespace IntelliTect.TestTools.Tests
             string? pattern = null;
             // The Regex constructor on a null pattern throws an ArgumentNullException
 #pragma warning disable CS8604 // Possible null reference argument.
-            _ = text.IsLikeRegEx(pattern);
+            _ = text.IsMatchRegEx(pattern);
 #pragma warning restore CS8604 // Possible null reference argument.
         }
 
